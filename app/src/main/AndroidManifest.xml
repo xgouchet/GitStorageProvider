@@ -1,11 +1,35 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="fr.xgouchet.gitstorageprovider">
 
-    <application android:allowBackup="true"
-                 android:label="@string/app_name"
-                 android:icon="@mipmap/ic_launcher"
-                 android:theme="@style/AppTheme">
+    <!-- Prevent other apps than system to explore the storage provider -->
+    <uses-permission android:name="ANDROID.PERMISSION.MANAGE_DOCUMENTS"/>
 
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme">
+
+        <!-- Local Git repository Provider -->
+        <provider
+            android:name=".ui.activities.GitProvider"
+            android:authorities="${applicationId}.provider.documents"
+            android:grantUriPermissions="true"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="android.permission.MANAGE_DOCUMENTS">
+            <intent-filter>
+                <action android:name="android.content.action.DOCUMENTS_PROVIDER"/>
+            </intent-filter>
+        </provider>
+
+        <!-- Test Activity -->
+        <activity android:name=".ui.activities.TestActivity">
+            <intent-filter>
+                <action android:name="ANDROID.INTENT.ACTION.MAIN"/>
+                <category android:name="ANDROID.INTENT.CATEGORY.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -33,12 +33,8 @@ android {
     buildTypes {
         debug {
             debuggable true
+            applicationIdSuffix ".debug"
             signingConfig signingConfigs.debug
-        }
-        debugCert {
-            minifyEnabled false
-            debuggable true
-            signingConfig signingConfigs.release
         }
         release {
             minifyEnabled false
@@ -62,6 +58,7 @@ dependencies {
 
     // ARCHITECTURE LIBRARIES
     compile 'com.squareup:otto:1.3.5'
+    compile 'com.jakewharton:butterknife:5.1.2'
 
     // JGit library
     compile 'org.eclipse.jgit:org.eclipse.jgit:3.7.1.+'

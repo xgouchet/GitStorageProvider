@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Git Storage Provider</string>
+    <string name="app_name">GitA</string>
+
+    <string name="ui_test_open">Open Document</string>
+    <string name="ui_test_write">Write new document</string>
+    <string name="ui_test_edit">Edit document</string>
+    <string name="root_title">GitA</string>
 </resources>
