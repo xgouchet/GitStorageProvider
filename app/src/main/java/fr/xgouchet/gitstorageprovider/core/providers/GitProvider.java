@@ -1,4 +1,4 @@
-package fr.xgouchet.gitstorageprovider.ui.activities;
+package fr.xgouchet.gitstorageprovider.core.providers;
 
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -18,6 +18,7 @@ import fr.xgouchet.gitstorageprovider.R;
  */
 public class GitProvider extends DocumentsProvider {
 
+    /** The Authority declared in the manifest */
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.documents";
 
     private static final String[] DEFAULT_ROOT_PROJECTION = new String[]{
