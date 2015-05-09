@@ -13,13 +13,13 @@ This application provides :
 
   - Create a basic interface to clone repo locally
   - Link the local repo to the storage provider
+  - Repo status notifications : 
+    - `"You've got unstaged changes"`
+    - `"You've got uncommited changes"`
+    - `"Local repo is [X commits ahead] [Y commits behind] origin"`
   - Add some security features : 
     - GPG crypto (edit files clear, stored crypted on the repo)
     - Import SSH config 
-  - Repo status notifications : 
-    - You've got unstaged changes 
-    - You've got uncommited changes
-    - Local repo is [X commits ahead] [Y commits behind] origin
   - Brand name, Logo, Design
 
  

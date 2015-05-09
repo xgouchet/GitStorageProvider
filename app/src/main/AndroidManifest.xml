@@ -2,7 +2,14 @@
           package="fr.xgouchet.gitstorageprovider">
 
     <!-- Prevent other apps than system to explore the storage provider -->
-    <uses-permission android:name="ANDROID.PERMISSION.MANAGE_DOCUMENTS"/>
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
+
+    <!-- Internet of course to clone, pull and push -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- For tests only, do not use that in production -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -13,7 +20,7 @@
 
         <!-- Local Git repository Provider -->
         <provider
-            android:name=".core.providers.GitProvider"
+            android:name="fr.xgouchet.gitstorageprovider.core.providers.GitProvider"
             android:authorities="${applicationId}.provider.documents"
             android:grantUriPermissions="true"
             android:exported="true"
@@ -25,22 +32,12 @@
         </provider>
 
         <!-- Test Activity -->
-        <activity android:name=".ui.activities.MainActivity"
+        <activity android:name="fr.xgouchet.gitstorageprovider.ui.activities.MainActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
-                <action android:name="ANDROID.INTENT.ACTION.MAIN"/>
-                <category android:name="ANDROID.INTENT.CATEGORY.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-
-        <!-- Test Activity -->
-        <activity
-            android:name=".ui.activities.TestActivity"
-            android:label="@string/title_activity_test">
-            <!--<intent-filter>-->
-                <!--<action android:name="ANDROID.INTENT.ACTION.MAIN"/>-->
-                <!--<category android:name="ANDROID.INTENT.CATEGORY.LAUNCHER"/>-->
-            <!--</intent-filter>-->
         </activity>
     </application>
 

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitstorageprovider.ui.fragments.CredentialsFragment;
 import fr.xgouchet.gitstorageprovider.ui.fragments.LocalReposFragment;
 import fr.xgouchet.gitstorageprovider.ui.views.SlidingTabLayout;
 
@@ -48,7 +49,6 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
         // prepare view pager and sliding layout
         mViewPager.setAdapter(new SamplePagerAdapter(getSupportFragmentManager()));
         mSlidingTabLayout.setViewPager(mViewPager);
-        mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.accent));
     }
 
     private static final int PAGE_LOCAL_REPOS = 0;
@@ -67,7 +67,7 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
         @Override
@@ -76,6 +76,8 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
             switch (position) {
                 case PAGE_LOCAL_REPOS:
                     return new LocalReposFragment();
+                case PAGE_CREDENTIALS:
+                    return new CredentialsFragment();
                 default:
                     return null;
             }
@@ -86,6 +88,8 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
             switch (position) {
                 case PAGE_LOCAL_REPOS:
                     return getString(R.string.title_fragment_local_repos);
+                case PAGE_CREDENTIALS:
+                    return getString(R.string.title_fragment_credentials);
                 default:
                     return null;
             }

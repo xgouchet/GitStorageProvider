@@ -1,6 +1,5 @@
 package fr.xgouchet.gitstorageprovider.ui.fragments;
 
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,29 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitstorageprovider.core.actions.ActionQueueExecutor;
-import fr.xgouchet.gitstorageprovider.core.actions.AsyncActionListener;
-import fr.xgouchet.gitstorageprovider.core.actions.CloneRepositoryAction;
 import fr.xgouchet.gitstorageprovider.ui.adapters.LocalReposAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 
-import com.melnykov.fab.FloatingActionButton;
-
-import org.eclipse.jgit.api.Git;
-
-import java.io.File;
-
 /**
- * This fragment displays the local repositories, and allow local actions :
- * Clone, delete, pull, commit, push
+ * This fragment displays the local credentials
  *
  * @author Xavier Gouchet
  */
-public class LocalReposFragment extends Fragment {
+public class CredentialsFragment extends Fragment {
 
     private DoubleDeckerBus mBus;
 
@@ -40,8 +31,6 @@ public class LocalReposFragment extends Fragment {
     RecyclerView mRecyclerView;
     @InjectView(R.id.fab)
     FloatingActionButton mFAB;
-
-    private final ActionQueueExecutor mActionQueueExecutor = new ActionQueueExecutor();
 
     private RecyclerView.Adapter mLocalReposAdapter;
 
@@ -92,27 +81,7 @@ public class LocalReposFragment extends Fragment {
     private final View.OnClickListener mFABOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(), "Cloning ViewFieldMatcher", Toast.LENGTH_SHORT).show();
-
-            CloneRepositoryAction.Input input = new CloneRepositoryAction.Input();
-            input.uri = "https://github.com/xgouchet/ViewFieldMatcher.git";
-            input.localPath = new File("/sdcard/GitA/ViewFieldMatcher");
-
-            AsyncActionListener<Git> listener = new AsyncActionListener<Git>() {
-                @Override
-                public void onActionPerformed(Git output) {
-                    Toast.makeText(getActivity(), "onActionPerformed", Toast.LENGTH_LONG).show();
-                    output.close();
-                }
-
-                @Override
-                public void onActionFailed(Exception e) {
-                    Toast.makeText(getActivity(), "onActionFailed " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-            };
-
-            mActionQueueExecutor.queueAction(new CloneRepositoryAction(), input, listener);
+            Toast.makeText(getActivity(), "Hello Fab", Toast.LENGTH_LONG).show();
         }
     };
 }

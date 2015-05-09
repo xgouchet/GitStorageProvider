@@ -2,7 +2,7 @@
     <string name="app_name">GitA</string>
 
     <string name="title_activity_main">GitA</string>
-    <string name="title_activity_test">GitA test</string>
+    <string name="title_activity_test">GitA Test</string>
     <string name="title_fragment_local_repos">Local repositories</string>
 
     <string name="ui_test_open">Open Document</string>
@@ -10,4 +10,5 @@
     <string name="ui_test_edit">Edit document</string>
 
     <string name="root_title">GitA</string>
+    <string name="title_fragment_credentials">Credentials</string>
 </resources>
