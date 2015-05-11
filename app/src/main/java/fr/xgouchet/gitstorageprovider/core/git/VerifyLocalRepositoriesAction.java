@@ -1,4 +1,4 @@
-package fr.xgouchet.gitstorageprovider.core.actions;
+package fr.xgouchet.gitstorageprovider.core.git;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import fr.xgouchet.gitstorageprovider.core.git.LocalRepository;
+import fr.xgouchet.gitstorageprovider.utils.actions.AsyncAction;
 
 /**
  * An action that will check each subfolders in the given folder, and return a list of

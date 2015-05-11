@@ -1,4 +1,4 @@
-package fr.xgouchet.gitstorageprovider.core.actions;
+package fr.xgouchet.gitstorageprovider.utils.actions;
 
 
 import android.os.Handler;
@@ -8,9 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.lang.ref.WeakReference;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -26,6 +23,7 @@ public class ActionQueueExecutor {
     private static final int WHAT_ACTION_PERFORMED = 0xACED;
     private static final String TAG = ActionQueueExecutor.class.getSimpleName();
 
+    // TODO add constructor param for thread names
     private final Executor mExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
         @Override
         public Thread newThread(final @NonNull Runnable runnable) {

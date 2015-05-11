@@ -1,10 +1,10 @@
-package fr.xgouchet.gitstorageprovider.core.actions;
+package fr.xgouchet.gitstorageprovider.core.git;
 
 import android.support.annotation.Nullable;
 
 import java.io.File;
 
-import fr.xgouchet.gitstorageprovider.core.git.LocalRepository;
+import fr.xgouchet.gitstorageprovider.utils.actions.AsyncVoidAction;
 
 /**
  * @author Xavier Gouchet

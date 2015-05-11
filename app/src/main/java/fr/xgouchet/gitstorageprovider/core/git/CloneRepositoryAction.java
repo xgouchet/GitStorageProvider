@@ -1,4 +1,4 @@
-package fr.xgouchet.gitstorageprovider.core.actions;
+package fr.xgouchet.gitstorageprovider.core.git;
 
 import android.support.annotation.Nullable;
 
@@ -12,7 +12,7 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import java.io.File;
 import java.util.Collection;
 
-import fr.xgouchet.gitstorageprovider.core.git.LocalRepository;
+import fr.xgouchet.gitstorageprovider.utils.actions.AsyncAction;
 
 /**
  * TODO return a LocalRepository

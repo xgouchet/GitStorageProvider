@@ -8,11 +8,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.xgouchet.gitstorageprovider.core.actions.ActionQueueExecutor;
-import fr.xgouchet.gitstorageprovider.core.actions.AsyncActionListener;
-import fr.xgouchet.gitstorageprovider.core.actions.CloneRepositoryAction;
-import fr.xgouchet.gitstorageprovider.core.actions.DeleteRepositoryAction;
-import fr.xgouchet.gitstorageprovider.core.actions.VerifyLocalRepositoriesAction;
+import fr.xgouchet.gitstorageprovider.utils.actions.ActionQueueExecutor;
+import fr.xgouchet.gitstorageprovider.utils.actions.AsyncActionListener;
 import fr.xgouchet.gitstorageprovider.core.credentials.CredentialsManager;
 import fr.xgouchet.gitstorageprovider.core.events.LocalRepositoriesChangedEvent;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;

@@ -1,4 +1,4 @@
-package fr.xgouchet.gitstorageprovider.core.actions;
+package fr.xgouchet.gitstorageprovider.utils.actions;
 
 import android.support.annotation.Nullable;
 

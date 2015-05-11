@@ -31,13 +31,18 @@
             </intent-filter>
         </provider>
 
-        <!-- Test Activity -->
+        <!-- Main Activity -->
         <activity android:name="fr.xgouchet.gitstorageprovider.ui.activities.MainActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <!-- Test Activity -->
+        <activity android:name="fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity"
+                  android:label="@string/title_activity_login">
         </activity>
     </application>
 

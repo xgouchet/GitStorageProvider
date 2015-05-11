@@ -1,5 +1,6 @@
 package fr.xgouchet.gitstorageprovider.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,8 +16,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity;
 import fr.xgouchet.gitstorageprovider.ui.adapters.CredentialsAdapter;
-import fr.xgouchet.gitstorageprovider.ui.adapters.LocalRepositoriesAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 
 /**
@@ -81,7 +82,12 @@ public class CredentialsFragment extends Fragment {
     private final View.OnClickListener mFABOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(), "Hello Fab", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Github OAuth", Toast.LENGTH_SHORT).show();
+
+            Intent login = new Intent(getActivity(), LoginActivity.class);
+            startActivity(login);
+
         }
     };
+
 }
