@@ -56,7 +56,7 @@ public class ActionQueueExecutor {
      */
     public <I, O> void queueAction(final @NonNull AsyncAction<I, O> action,
                                    final @Nullable I input,
-                                   final @NonNull AsyncActionListener<O> listener) {
+                                   final @NonNull AsyncActionListener<I, O> listener) {
         Log.d(TAG, "Queue action " + action);
         mExecutor.execute(new AsyncActionRunnable<>(action, input, listener, mHandler));
     }
@@ -72,13 +72,13 @@ public class ActionQueueExecutor {
         private final AsyncAction<I, O> mAction;
         private final Handler mHandler;
         private final I mInput;
-        private final AsyncActionListener<O> mListener;
+        private final AsyncActionListener<I, O> mListener;
         private O mOutput;
         private Exception mException;
 
         private AsyncActionRunnable(final @NonNull AsyncAction<I, O> action,
                                     final @Nullable I input,
-                                    final @NonNull AsyncActionListener<O> listener,
+                                    final @NonNull AsyncActionListener<I, O> listener,
                                     final @NonNull Handler handler) {
             mAction = action;
             mInput = input;
@@ -113,7 +113,7 @@ public class ActionQueueExecutor {
             if (mException == null) {
                 mListener.onActionPerformed(mOutput);
             } else {
-                mListener.onActionFailed(mException);
+                mListener.onActionFailed(mInput, mException);
             }
         }
     }

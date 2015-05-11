@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitstorageprovider.ui.adapters.LocalReposAdapter;
+import fr.xgouchet.gitstorageprovider.ui.adapters.LocalRepositoriesAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 
 /**
@@ -40,7 +40,7 @@ public class CredentialsFragment extends Fragment {
 
         // Get the common event bus
         mBus = ((GitApplication) getActivity().getApplication()).getBus();
-        mLocalReposAdapter = new LocalReposAdapter();
+        mLocalReposAdapter = new LocalRepositoriesAdapter();
     }
 
     @Override

@@ -4,14 +4,19 @@ import android.support.annotation.Nullable;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.transport.CredentialsProvider;
 
 import java.io.File;
 
+import fr.xgouchet.gitstorageprovider.core.git.LocalRepository;
+
 /**
+ * TODO return a LocalRepository
+ *
  * @author Xavier Gouchet
  */
-public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.Input, Git> {
+public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.Input, LocalRepository> {
 
     /**
      * The expected input for a clone action
@@ -24,7 +29,7 @@ public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.
 
     @Nullable
     @Override
-    public Git performAction(@Nullable Input input) throws Exception {
+    public LocalRepository performAction(@Nullable Input input) throws Exception {
         if (input == null) {
             return null;
         }
@@ -34,6 +39,9 @@ public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.
                 .setCredentialsProvider(input.credentialsProvider)
                 .setDirectory(input.localPath);
 
-        return cloneCommand.call();
+        Git git = cloneCommand.call();
+        Status status = git.status().call();
+
+        return new LocalRepository(input.localPath, input.localPath.getName(), status);
     }
 }
