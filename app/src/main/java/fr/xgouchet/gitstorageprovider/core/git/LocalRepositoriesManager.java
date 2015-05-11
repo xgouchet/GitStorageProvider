@@ -6,15 +6,14 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 
 import fr.xgouchet.gitstorageprovider.core.actions.ActionQueueExecutor;
 import fr.xgouchet.gitstorageprovider.core.actions.AsyncActionListener;
 import fr.xgouchet.gitstorageprovider.core.actions.CloneRepositoryAction;
+import fr.xgouchet.gitstorageprovider.core.actions.DeleteRepositoryAction;
 import fr.xgouchet.gitstorageprovider.core.actions.VerifyLocalRepositoriesAction;
+import fr.xgouchet.gitstorageprovider.core.credentials.CredentialsManager;
 import fr.xgouchet.gitstorageprovider.core.events.LocalRepositoriesChangedEvent;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 
@@ -130,7 +129,24 @@ public class LocalRepositoriesManager {
         @Override
         public void onActionFailed(CloneRepositoryAction.Input input, Exception e) {
             Log.e(TAG, "Clone failed", e);
-            input.localPath.delete();
+            LocalRepository fakeRepo = new LocalRepository(input.localPath);
+            mActionQueueExecutor.queueAction(new DeleteRepositoryAction(), fakeRepo, mDeleteActionListener);
+        }
+    };
+
+    /**
+     * Listener for clone actions
+     */
+    private final AsyncActionListener<LocalRepository, Void>
+            mDeleteActionListener = new AsyncActionListener<LocalRepository, Void>() {
+        @Override
+        public void onActionPerformed(Void output) {
+            Log.d(TAG, "Delete successful");
+        }
+
+        @Override
+        public void onActionFailed(LocalRepository input, Exception e) {
+            Log.e(TAG, "Delete failed", e);
         }
     };
 }

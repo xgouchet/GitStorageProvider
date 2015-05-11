@@ -94,8 +94,8 @@ public class LocalRepositoriesFragment extends Fragment {
     private final View.OnClickListener mFABOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(), "Cloning ViewFieldMatcher", Toast.LENGTH_SHORT).show();
-            mLocalRepositoriesManager.cloneRepositoryAsync("ViewFieldMatcher", "https://github.com/xgouchet/ViewFieldMatcher.git");
+            Toast.makeText(getActivity(), "Cloning Editors (need Credentials", Toast.LENGTH_SHORT).show();
+            mLocalRepositoriesManager.cloneRepositoryAsync("Editors", "git@github.com:xgouchet/Editors.git");
         }
     };
 

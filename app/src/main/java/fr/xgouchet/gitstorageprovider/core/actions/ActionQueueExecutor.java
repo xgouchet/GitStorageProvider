@@ -92,10 +92,10 @@ public class ActionQueueExecutor {
             Log.d(TAG, "Perform action " + mAction);
             try {
                 mOutput = mAction.performAction(mInput);
-                Log.d(TAG, "Action successfull : " + mInput +" -> " + mOutput);
+                Log.d(TAG, "Action successfull : " + mInput + " -> " + mOutput);
             } catch (Exception e) {
                 mException = e;
-                Log.w(TAG, "Action failed : " + mInput +" -> " + mException);
+                Log.w(TAG, "Action failed : " + mInput + " -> " + mException);
             }
 
             // notify target

@@ -1,10 +1,14 @@
 package fr.xgouchet.gitstorageprovider.core.git;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.lib.Ref;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Model object holding a reference and state of a local repository
@@ -15,14 +19,20 @@ public class LocalRepository {
 
     private final File mFolder;
     private final String mName;
+    private final Collection<Ref> mRemote;
     private Status mStatus;
     private int mAhead, mBehind;
 
+    public LocalRepository(File folder) {
+        this(folder, Collections.<Ref>emptyList(), null);
+    }
+
     public LocalRepository(final @NonNull File folder,
-                           final @NonNull String name,
-                           final @NonNull Status status) {
+                           final @NonNull Collection<Ref> remote,
+                           final @Nullable Status status) {
         mFolder = folder;
-        mName = name;
+        mName = folder.getName();
+        mRemote = remote;
     }
 
     public void setStatus(@NonNull Status status) {
@@ -35,6 +45,10 @@ public class LocalRepository {
 
     public Status getStatus() {
         return mStatus;
+    }
+
+    public File getFolder() {
+        return mFolder;
     }
 
     @Override
@@ -51,4 +65,5 @@ public class LocalRepository {
     public int hashCode() {
         return mFolder.hashCode();
     }
+
 }

@@ -6,11 +6,13 @@ import android.util.Log;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.Ref;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 
 import fr.xgouchet.gitstorageprovider.core.git.LocalRepository;
@@ -64,13 +66,15 @@ public class VerifyLocalRepositoriesAction implements AsyncAction<File, List<Loc
     @Nullable
     private LocalRepository getLocalRepository(File candidate) throws IOException, GitAPIException {
 
+        // create a git instance in the given repository
         Git git = Git.open(candidate);
+
+        // get the status
         Status status = git.status().call();
 
-        LocalRepository localRepository = new LocalRepository(candidate,
-                candidate.getName(),
-                status);
+        // get the remote url
+        Collection<Ref> remotes = git.lsRemote().setRemote(Constants.DEFAULT_REMOTE_NAME).call();
 
-        return localRepository;
+        return new LocalRepository(candidate, remotes, status);
     }
 }

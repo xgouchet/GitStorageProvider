@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitstorageprovider.ui.adapters.CredentialsAdapter;
 import fr.xgouchet.gitstorageprovider.ui.adapters.LocalRepositoriesAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 
@@ -32,7 +33,7 @@ public class CredentialsFragment extends Fragment {
     @InjectView(R.id.fab)
     FloatingActionButton mFAB;
 
-    private RecyclerView.Adapter mLocalReposAdapter;
+    private RecyclerView.Adapter mCredentialsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class CredentialsFragment extends Fragment {
 
         // Get the common event bus
         mBus = ((GitApplication) getActivity().getApplication()).getBus();
-        mLocalReposAdapter = new LocalRepositoriesAdapter();
+        mCredentialsAdapter = new CredentialsAdapter();
     }
 
     @Override
@@ -50,9 +51,8 @@ public class CredentialsFragment extends Fragment {
 
         // set recycler view layout manager
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        llm.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(llm);
-        mRecyclerView.setAdapter(mLocalReposAdapter);
+        mRecyclerView.setAdapter(mCredentialsAdapter);
         // TODO setup empty view
 
         // attach FAB to the recycler view
