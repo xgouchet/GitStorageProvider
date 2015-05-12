@@ -1,5 +1,8 @@
 package fr.xgouchet.gitstorageprovider.utils.actions;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * @param <I> the action input type
  * @param <O> the expected output type
@@ -12,7 +15,7 @@ public interface AsyncActionListener<I, O> {
      *
      * @param output the result of the action
      */
-    void onActionPerformed(O output);
+    void onActionPerformed(@Nullable O output);
 
     /**
      * Called when the action failed and threw and excetion.
@@ -20,5 +23,5 @@ public interface AsyncActionListener<I, O> {
      *
      * @param e the exception thrown
      */
-    void onActionFailed(I input, Exception e);
+    void onActionFailed(@Nullable I input, @NonNull Exception e);
 }

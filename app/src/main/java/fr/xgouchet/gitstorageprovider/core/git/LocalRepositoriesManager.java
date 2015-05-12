@@ -2,6 +2,7 @@ package fr.xgouchet.gitstorageprovider.core.git;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.File;
@@ -93,7 +94,7 @@ public class LocalRepositoriesManager {
             mVerifyActionListener = new AsyncActionListener<File, List<LocalRepository>>() {
 
         @Override
-        public void onActionPerformed(List<LocalRepository> output) {
+        public void onActionPerformed(final @Nullable List<LocalRepository> output) {
             for (LocalRepository candidates : output) {
                 if (mLocalRepositories.contains(candidates)) {
                     mLocalRepositories.remove(candidates);
@@ -104,7 +105,8 @@ public class LocalRepositoriesManager {
         }
 
         @Override
-        public void onActionFailed(File input, Exception e) {
+        public void onActionFailed(final @Nullable File input,
+                                   final @NonNull Exception e) {
             Log.e(TAG, "Verify failed", e);
         }
     };
@@ -115,7 +117,7 @@ public class LocalRepositoriesManager {
     private final AsyncActionListener<CloneRepositoryAction.Input, LocalRepository>
             mCloneActionListener = new AsyncActionListener<CloneRepositoryAction.Input, LocalRepository>() {
         @Override
-        public void onActionPerformed(LocalRepository output) {
+        public void onActionPerformed(final @Nullable LocalRepository output) {
             if (mLocalRepositories.contains(output)) {
                 mLocalRepositories.remove(output);
             }
@@ -124,7 +126,8 @@ public class LocalRepositoriesManager {
         }
 
         @Override
-        public void onActionFailed(CloneRepositoryAction.Input input, Exception e) {
+        public void onActionFailed(final @Nullable CloneRepositoryAction.Input input,
+                                   final @NonNull Exception e) {
             Log.e(TAG, "Clone failed", e);
             LocalRepository fakeRepo = new LocalRepository(input.localPath);
             mActionQueueExecutor.queueAction(new DeleteRepositoryAction(), fakeRepo, mDeleteActionListener);
@@ -137,12 +140,13 @@ public class LocalRepositoriesManager {
     private final AsyncActionListener<LocalRepository, Void>
             mDeleteActionListener = new AsyncActionListener<LocalRepository, Void>() {
         @Override
-        public void onActionPerformed(Void output) {
+        public void onActionPerformed(final @Nullable Void output) {
             Log.d(TAG, "Delete successful");
         }
 
         @Override
-        public void onActionFailed(LocalRepository input, Exception e) {
+        public void onActionFailed(final @Nullable LocalRepository input,
+                                   final @NonNull Exception e) {
             Log.e(TAG, "Delete failed", e);
         }
     };

@@ -1,5 +1,6 @@
 package fr.xgouchet.gitstorageprovider.ui.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,10 +13,15 @@ import android.view.MenuItem;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitstorageprovider.core.account.Account;
+import fr.xgouchet.gitstorageprovider.core.events.UserLoggedEvent;
+import fr.xgouchet.gitstorageprovider.ui.fragments.AccountsFragment;
 import fr.xgouchet.gitstorageprovider.ui.fragments.CredentialsFragment;
 import fr.xgouchet.gitstorageprovider.ui.fragments.LocalRepositoriesFragment;
 import fr.xgouchet.gitstorageprovider.ui.views.SlidingTabLayout;
+import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 
 /**
  * @author Xavier Gouchet
@@ -30,9 +36,15 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
     @InjectView(R.id.toolbar)
     public Toolbar mToolbar;
 
+
+    private DoubleDeckerBus mBus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get the common event bus
+        mBus = ((GitApplication) getApplication()).getBus();
 
         // set content
         setContentView(R.layout.activity_main);
@@ -51,6 +63,7 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
 
     private static final int PAGE_LOCAL_REPOS = 0;
     private static final int PAGE_CREDENTIALS = 1;
+    private static final int PAGE_ACCOUNTS = 2;
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
@@ -65,7 +78,7 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -76,6 +89,8 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
                     return new LocalRepositoriesFragment();
                 case PAGE_CREDENTIALS:
                     return new CredentialsFragment();
+                case PAGE_ACCOUNTS:
+                    return new AccountsFragment();
                 default:
                     return null;
             }
@@ -88,6 +103,8 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
                     return getString(R.string.title_fragment_local_repos);
                 case PAGE_CREDENTIALS:
                     return getString(R.string.title_fragment_credentials);
+                case PAGE_ACCOUNTS:
+                    return getString(R.string.title_fragment_accounts);
                 default:
                     return null;
             }

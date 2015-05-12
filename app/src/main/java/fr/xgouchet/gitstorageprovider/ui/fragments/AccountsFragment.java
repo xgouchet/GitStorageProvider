@@ -1,49 +1,69 @@
 package fr.xgouchet.gitstorageprovider.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitstorageprovider.core.account.Account;
+import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
+import fr.xgouchet.gitstorageprovider.core.events.AccountsChangedEvent;
+import fr.xgouchet.gitstorageprovider.core.events.LocalRepositoriesChangedEvent;
+import fr.xgouchet.gitstorageprovider.core.events.UserLoggedEvent;
 import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity;
+import fr.xgouchet.gitstorageprovider.ui.activities.MainActivity;
+import fr.xgouchet.gitstorageprovider.ui.adapters.AccountsAdapter;
 import fr.xgouchet.gitstorageprovider.ui.adapters.CredentialsAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
+import fr.xgouchet.gitstorageprovider.utils.actions.AsyncActionListener;
 
 /**
- * This fragment displays the local credentials
+ * This fragment displays the accounts the user is logged into
  *
  * @author Xavier Gouchet
  */
-public class CredentialsFragment extends Fragment {
+public class AccountsFragment extends Fragment {
 
     private DoubleDeckerBus mBus;
+    private AccountsManager mAccountsManager;
 
     @InjectView(android.R.id.list)
     RecyclerView mRecyclerView;
     @InjectView(R.id.fab)
     FloatingActionButton mFAB;
 
-    private RecyclerView.Adapter mCredentialsAdapter;
+    private AccountsAdapter mAccountsAdapter;
+    private final List<Account> mAccounts = new ArrayList<>();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Get the common event bus
-        mBus = ((GitApplication) getActivity().getApplication()).getBus();
-        mCredentialsAdapter = new CredentialsAdapter();
+        // Get the common managers
+        GitApplication app = (GitApplication) getActivity().getApplication();
+        mBus = app.getBus();
+        mAccountsManager = app.getAccountsManager();
+
+        // create adapter
+        mAccountsAdapter = new AccountsAdapter();
     }
 
     @Override
@@ -54,7 +74,7 @@ public class CredentialsFragment extends Fragment {
         // set recycler view layout manager
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(llm);
-        mRecyclerView.setAdapter(mCredentialsAdapter);
+        mRecyclerView.setAdapter(mAccountsAdapter);
         // TODO setup empty view
 
         // attach FAB to the recycler view
@@ -69,7 +89,9 @@ public class CredentialsFragment extends Fragment {
         super.onResume();
 
         // register our event handler
-        // TODO mBus.register(mEventHandler);
+        mBus.register(mEventHandler);
+
+        mAccountsManager.refreshAvailableAccounts();
     }
 
     @Override
@@ -77,13 +99,25 @@ public class CredentialsFragment extends Fragment {
         super.onPause();
 
         // unregister our event handler
-        // TODO mBus.unregister(mEventHandler);
+        mBus.unregister(mEventHandler);
     }
 
     private final View.OnClickListener mFABOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(), "TODO Generate SSH keys", Toast.LENGTH_SHORT).show();
+            // TODO Add more services (bitbucket, sourceforge, googlecode, ...)
+            // TODO Add service selector
+            Toast.makeText(getActivity(), "Github OAuth", Toast.LENGTH_SHORT).show();
+            LoginActivity.loginWithService(getActivity(),
+                    OAuthConfigFactory.SERVICE_GITHUB);
+        }
+    };
+
+
+    private final Object mEventHandler = new Object() {
+        @Subscribe
+        public void onAccountsChanged(final @NonNull AccountsChangedEvent event) {
+          mAccountsAdapter.setAccounts(event.getAccounts());
         }
     };
 

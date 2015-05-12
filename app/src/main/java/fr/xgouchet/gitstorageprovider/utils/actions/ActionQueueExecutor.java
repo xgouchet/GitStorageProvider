@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
@@ -24,7 +25,7 @@ public class ActionQueueExecutor {
     private static final String TAG = ActionQueueExecutor.class.getSimpleName();
 
     // TODO add constructor param for thread names
-    private final Executor mExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
+    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
         @Override
         public Thread newThread(final @NonNull Runnable runnable) {
             return new Thread(runnable, "ActionQueueWorker");
@@ -32,6 +33,7 @@ public class ActionQueueExecutor {
     });
 
     private final Handler mHandler;
+    private boolean mTerminated;
 
     /**
      * Creates an instance, with all listener callback performed on the main thread
@@ -56,7 +58,18 @@ public class ActionQueueExecutor {
                                    final @Nullable I input,
                                    final @NonNull AsyncActionListener<I, O> listener) {
         Log.d(TAG, "Queue action " + action);
+        if (mTerminated) {
+            return;
+        }
         mExecutor.execute(new AsyncActionRunnable<>(action, input, listener, mHandler));
+    }
+
+    /**
+     * Terminates the underlying thread and handler. Once this is called, you should never queue any action
+     */
+    public void release() {
+        mExecutor.shutdownNow();
+        mTerminated = true;
     }
 
     /**
