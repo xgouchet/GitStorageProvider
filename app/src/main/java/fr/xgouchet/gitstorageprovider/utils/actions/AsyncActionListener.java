@@ -23,5 +23,5 @@ public interface AsyncActionListener<I, O> {
      *
      * @param e the exception thrown
      */
-    void onActionFailed(@Nullable I input, @NonNull Exception e);
+    void onActionFailed(@NonNull I input, @NonNull Exception e);
 }

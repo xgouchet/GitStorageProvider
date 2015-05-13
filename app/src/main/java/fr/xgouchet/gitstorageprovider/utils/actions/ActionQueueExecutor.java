@@ -55,7 +55,7 @@ public class ActionQueueExecutor {
      * @param action the action to perform
      */
     public <I, O> void queueAction(final @NonNull AsyncAction<I, O> action,
-                                   final @Nullable I input,
+                                   final @NonNull I input,
                                    final @NonNull AsyncActionListener<I, O> listener) {
         Log.d(TAG, "Queue action " + action);
         if (mTerminated) {
@@ -88,7 +88,7 @@ public class ActionQueueExecutor {
         private Exception mException;
 
         private AsyncActionRunnable(final @NonNull AsyncAction<I, O> action,
-                                    final @Nullable I input,
+                                    final @NonNull I input,
                                     final @NonNull AsyncActionListener<I, O> listener,
                                     final @NonNull Handler handler) {
             mAction = action;

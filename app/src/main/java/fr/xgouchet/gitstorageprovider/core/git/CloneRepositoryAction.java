@@ -1,5 +1,6 @@
 package fr.xgouchet.gitstorageprovider.core.git;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.eclipse.jgit.api.CloneCommand;
@@ -25,23 +26,32 @@ public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.
      * The expected input for a clone action
      */
     public static class Input {
-        public String uri;
-        public File localPath;
-        public CredentialsProvider credentialsProvider;
+        final String mUri;
+        final File mLocalPath;
+        final CredentialsProvider mCredentialsProvider;
+
+        public Input(final @NonNull String uri,
+                     final @NonNull File localPath,
+                     final @NonNull CredentialsProvider credentialsProvider) {
+            mUri = uri;
+            mLocalPath = localPath;
+            mCredentialsProvider = credentialsProvider;
+        }
+
+        public File getLocalPath() {
+            return mLocalPath;
+        }
     }
 
     @Nullable
     @Override
-    public LocalRepository performAction(@Nullable Input input) throws Exception {
-        if (input == null) {
-            return null;
-        }
+    public LocalRepository performAction(final @NonNull Input input) throws Exception {
 
         // prepare the clone command
         CloneCommand cloneCommand = Git.cloneRepository()
-                .setURI(input.uri)
-                .setCredentialsProvider(input.credentialsProvider)
-                .setDirectory(input.localPath);
+                .setURI(input.mUri)
+                .setDirectory(input.mLocalPath)
+                .setCredentialsProvider(input.mCredentialsProvider);
 
         // actually clone the repo
         Git git = cloneCommand.call();
@@ -53,6 +63,6 @@ public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.
         Collection<Ref> remotes = git.lsRemote().setRemote(Constants.DEFAULT_REMOTE_NAME).call();
 
 
-        return new LocalRepository(input.localPath, remotes, status);
+        return new LocalRepository(input.mLocalPath, remotes, status);
     }
 }

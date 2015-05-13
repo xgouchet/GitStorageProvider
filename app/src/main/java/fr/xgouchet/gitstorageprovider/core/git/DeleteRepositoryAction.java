@@ -1,5 +1,6 @@
 package fr.xgouchet.gitstorageprovider.core.git;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.io.File;
@@ -12,18 +13,14 @@ import fr.xgouchet.gitstorageprovider.utils.actions.AsyncVoidAction;
 public class DeleteRepositoryAction extends AsyncVoidAction<LocalRepository> {
 
     @Override
-    public void performVoidAction(@Nullable LocalRepository input) throws Exception {
-        if (input == null) {
-            return;
-        }
-
+    public void performVoidAction(final @NonNull LocalRepository input) throws Exception {
         File repo = input.getFolder();
         if (repo.isDirectory()) {
             deleteRecursive(repo);
         }
     }
 
-    private void deleteRecursive(File directory) {
+    private void deleteRecursive(final @NonNull File directory) {
         File[] children = directory.listFiles();
 
         if (children != null) {

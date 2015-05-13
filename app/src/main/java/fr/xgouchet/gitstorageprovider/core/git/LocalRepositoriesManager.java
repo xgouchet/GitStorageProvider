@@ -58,10 +58,9 @@ public class LocalRepositoriesManager {
      * @param uri  the remote (origin) url
      */
     public void cloneRepositoryAsync(String name, String uri) {
-        CloneRepositoryAction.Input input = new CloneRepositoryAction.Input();
-        input.uri = uri;
-        input.localPath = new File(mLocalWorkspace, name);
-        input.credentialsProvider = mCredentialsManager;
+        CloneRepositoryAction.Input input = new CloneRepositoryAction.Input(uri,
+                new File(mLocalWorkspace, name),
+                mCredentialsManager);
 
         mActionQueueExecutor.queueAction(
                 new CloneRepositoryAction(),
@@ -105,7 +104,7 @@ public class LocalRepositoriesManager {
         }
 
         @Override
-        public void onActionFailed(final @Nullable File input,
+        public void onActionFailed(final @NonNull File input,
                                    final @NonNull Exception e) {
             Log.e(TAG, "Verify failed", e);
         }
@@ -126,10 +125,10 @@ public class LocalRepositoriesManager {
         }
 
         @Override
-        public void onActionFailed(final @Nullable CloneRepositoryAction.Input input,
+        public void onActionFailed(final @NonNull CloneRepositoryAction.Input input,
                                    final @NonNull Exception e) {
             Log.e(TAG, "Clone failed", e);
-            LocalRepository fakeRepo = new LocalRepository(input.localPath);
+            LocalRepository fakeRepo = new LocalRepository(input.getLocalPath());
             mActionQueueExecutor.queueAction(new DeleteRepositoryAction(), fakeRepo, mDeleteActionListener);
         }
     };
@@ -145,7 +144,7 @@ public class LocalRepositoriesManager {
         }
 
         @Override
-        public void onActionFailed(final @Nullable LocalRepository input,
+        public void onActionFailed(final @NonNull LocalRepository input,
                                    final @NonNull Exception e) {
             Log.e(TAG, "Delete failed", e);
         }

@@ -95,7 +95,9 @@ public class LocalRepositoriesFragment extends Fragment {
         @Override
         public void onClick(View view) {
             Toast.makeText(getActivity(), "Cloning Editors (need Credentials", Toast.LENGTH_SHORT).show();
-            mLocalRepositoriesManager.cloneRepositoryAsync("Editors", "git@github.com:xgouchet/Editors.git");
+            String repoHttps = "https://github.com/xgouchet/Editors.git";
+            String repoSSH = "git@github.com:xgouchet/Editors.git";
+            mLocalRepositoriesManager.cloneRepositoryAsync("Editors", repoHttps);
         }
     };
 

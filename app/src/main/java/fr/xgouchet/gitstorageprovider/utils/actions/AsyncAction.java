@@ -1,5 +1,6 @@
 package fr.xgouchet.gitstorageprovider.utils.actions;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
@@ -18,7 +19,7 @@ public interface AsyncAction<I, O> {
      * @return the output
      */
     @Nullable
-    O performAction(final @Nullable I input) throws Exception;
+    O performAction(final @NonNull I input) throws Exception;
 
 
 }

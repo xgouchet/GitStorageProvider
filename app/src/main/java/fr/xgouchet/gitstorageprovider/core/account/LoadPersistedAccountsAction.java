@@ -1,6 +1,7 @@
 package fr.xgouchet.gitstorageprovider.core.account;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -20,13 +21,9 @@ public class LoadPersistedAccountsAction implements AsyncAction<Context, List<Ac
 
     @Nullable
     @Override
-    public List<Account> performAction(@Nullable Context context) throws Exception {
+    public List<Account> performAction(final @NonNull Context context) throws Exception {
 
         List<Account> output = new ArrayList<>();
-        if (context == null) {
-            return output;
-        }
-
 
         for (int serviceId : SERVICE_IDS) {
             Account account = AccountsManager.loadPersistedAccount(context, serviceId);

@@ -1,5 +1,6 @@
 package fr.xgouchet.gitstorageprovider.core.git;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -29,11 +30,11 @@ public class VerifyLocalRepositoriesAction implements AsyncAction<File, List<Loc
 
     @Nullable
     @Override
-    public List<LocalRepository> performAction(@Nullable File input) throws Exception {
+    public List<LocalRepository> performAction(final @NonNull File input) throws Exception {
         List<LocalRepository> results = new ArrayList<>();
 
-        if ((input == null) || (input.isFile())) {
-            Log.w(TAG, "input is null, no result");
+        if (!input.isDirectory()) {
+            Log.w(TAG, "input is not a directory, no result");
             return results;
         }
 
@@ -64,7 +65,8 @@ public class VerifyLocalRepositoriesAction implements AsyncAction<File, List<Loc
     }
 
     @Nullable
-    private LocalRepository getLocalRepository(File candidate) throws IOException, GitAPIException {
+    private LocalRepository getLocalRepository(final @NonNull File candidate)
+            throws IOException, GitAPIException {
 
         // create a git instance in the given repository
         Git git = Git.open(candidate);

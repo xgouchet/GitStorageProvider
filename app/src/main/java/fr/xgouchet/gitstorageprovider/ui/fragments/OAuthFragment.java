@@ -1,12 +1,9 @@
 package fr.xgouchet.gitstorageprovider.ui.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,17 +15,9 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import fr.xgouchet.gitstorageprovider.GitApplication;
-import fr.xgouchet.gitstorageprovider.core.account.Account;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
-import fr.xgouchet.gitstorageprovider.core.events.UserLoggedEvent;
-import fr.xgouchet.gitstorageprovider.core.oauth.GetUserInfoAction;
 import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfig;
 import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
-import fr.xgouchet.gitstorageprovider.core.oauth.RequestAccessTokenAction;
-import fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity;
-import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
-import fr.xgouchet.gitstorageprovider.utils.actions.ActionQueueExecutor;
-import fr.xgouchet.gitstorageprovider.utils.actions.AsyncActionListener;
 
 /**
  * @author Xavier Gouchet

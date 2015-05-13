@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.xgouchet.gitstorageprovider.core.events.AccountsChangedEvent;
-import fr.xgouchet.gitstorageprovider.core.oauth.GetUserInfoAction;
 import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfig;
+import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.core.oauth.RequestAccessTokenAction;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 import fr.xgouchet.gitstorageprovider.utils.actions.ActionQueueExecutor;
+import fr.xgouchet.gitstorageprovider.utils.actions.AsyncAction;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncActionListener;
 
 /**
@@ -69,16 +70,31 @@ public class AccountsManager {
 
         @Override
         public void onActionPerformed(final @Nullable RequestAccessTokenAction.Output output) {
+
+            if (output == null) {
+                Log.w(TAG, "Got null AccessToken output");
+                return;
+            }
+
             // TODO send message : we're oauthenticated
             Log.i(TAG, "Authenticated : " + output);
 
-            GetUserInfoAction.Input input = new GetUserInfoAction.Input(output.getOAuthConfig(), output.getAccessToken());
-            mActionQueueExecutor.queueAction(new GetUserInfoAction(), input, mGetUserInfoListener);
+            AsyncAction<String, Account> action;
+            switch (output.getOAuthConfig().getServiceId()) {
+                case OAuthConfigFactory.SERVICE_GITHUB:
+                    action = new fr.xgouchet.gitstorageprovider.core.api.github.GetAccountAction();
+                    break;
+                default:
+                    action = null;
+            }
 
+            if (action != null) {
+                mActionQueueExecutor.queueAction(action, output.getAccessToken(), mGetAccountListener);
+            }
         }
 
         @Override
-        public void onActionFailed(final @Nullable RequestAccessTokenAction.Input input,
+        public void onActionFailed(final @NonNull RequestAccessTokenAction.Input input,
                                    final @NonNull Exception e) {
             Log.e(TAG, "Error in OAuth request access token", e);
         }
@@ -87,26 +103,31 @@ public class AccountsManager {
     /**
      * Listener for UserInfo request
      */
-    private final AsyncActionListener<GetUserInfoAction.Input, Account>
-            mGetUserInfoListener = new AsyncActionListener<GetUserInfoAction.Input, Account>() {
+    private final AsyncActionListener<String, Account>
+            mGetAccountListener = new AsyncActionListener<String, Account>() {
 
         @Override
-        public void onActionPerformed(final @Nullable Account output) {
-            Log.i(TAG, "Got user : " + output);
+        public void onActionPerformed(final @Nullable Account account) {
+            Log.i(TAG, "Got account : " + account);
 
-            // set result
-            if (mAccounts.contains(output)) {
-                mAccounts.remove(output);
+            if (account == null) {
+                Log.w(TAG, "Got null account !");
+                return;
             }
 
-            persistAccount(mContext, output);
-            mAccounts.add(output);
+            // set result
+            if (mAccounts.contains(account)) {
+                mAccounts.remove(account);
+            }
+
+            persistAccount(mContext, account);
+            mAccounts.add(account);
 
             fireAccountsChanged();
         }
 
         @Override
-        public void onActionFailed(final @Nullable GetUserInfoAction.Input input,
+        public void onActionFailed(final @NonNull String input,
                                    final @NonNull Exception e) {
             Log.e(TAG, "Error in get user info request", e);
         }
@@ -125,7 +146,7 @@ public class AccountsManager {
         }
 
         @Override
-        public void onActionFailed(@Nullable Context input, @NonNull Exception e) {
+        public void onActionFailed(@NonNull Context input, @NonNull Exception e) {
             Log.e(TAG, "Error in load persisted accounts", e);
         }
     };

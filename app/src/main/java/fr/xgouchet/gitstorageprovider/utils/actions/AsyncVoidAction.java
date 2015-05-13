@@ -1,5 +1,6 @@
 package fr.xgouchet.gitstorageprovider.utils.actions;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
@@ -15,11 +16,11 @@ public abstract class AsyncVoidAction<I> implements AsyncAction<I, Void> {
      * @param input the input
      * @throws Exception
      */
-    public abstract void performVoidAction(@Nullable I input) throws Exception;
+    public abstract void performVoidAction(@NonNull I input) throws Exception;
 
     @Nullable
     @Override
-    public final Void performAction(@Nullable I input) throws Exception {
+    public final Void performAction(final @NonNull I input) throws Exception {
         performVoidAction(input);
         return null;
     }

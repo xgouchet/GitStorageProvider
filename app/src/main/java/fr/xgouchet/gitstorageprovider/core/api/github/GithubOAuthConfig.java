@@ -33,6 +33,9 @@ public class GithubOAuthConfig extends OAuthConfig {
 
     private static final String REDIRECT = "http://www.xgouchet.fr/gitstorageprovider/oauth/login_success";
 
+    public static final String ENDPOINT = "https://api.github.com";
+    public static final int SERVICE_ID = OAuthConfigFactory.SERVICE_GITHUB;
+
 
     @NonNull
     @Override
@@ -77,7 +80,7 @@ public class GithubOAuthConfig extends OAuthConfig {
 
     @Override
     public String getUserInfoRequest(@NonNull String accessToken) {
-        return "https://api.github.com/user?access_token=" + accessToken;
+        return ENDPOINT + "/user?access_token=" + accessToken;
     }
 
     @NonNull
