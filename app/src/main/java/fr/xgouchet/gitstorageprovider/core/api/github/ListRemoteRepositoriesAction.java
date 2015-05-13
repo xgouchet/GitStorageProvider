@@ -43,20 +43,25 @@ public class ListRemoteRepositoriesAction
     @Override
     protected List<RemoteRepository> handleResponse(final @NonNull String response,
                                                     final @NonNull Input input) throws Exception {
-        JSONArray array =  new JSONArray(response);
+        JSONArray array = new JSONArray(response);
         int count = array.length();
         List<RemoteRepository> output = new ArrayList<>(count);
 
-        for (int i = 0; i < count ; ++i){
-            JSONObject repository = array.getJSONObject(i);
+        for (int i = 0; i < count; ++i) {
             // {
             //   ...
             //   "name" : "Foo",
             //   "clone_url" : "https://github.com/owner/Foo.git",
             //   "git_url" : "git://github.com/owner/Foo.git",
-            //   "ssh_url" : "https://github.com/owner/Foo.git",
+            //   "ssh_url" : "git@github.com:owner/Foo.git",
             //   ...
             // }
+
+            JSONObject repository = array.getJSONObject(i);
+            String name = repository.getString("name");
+            String url = repository.getString("git_url");
+            RemoteRepository repo = new RemoteRepository(input.mAccount.getServiceId(), name, url);
+            output.add(repo);
         }
 
         return output;

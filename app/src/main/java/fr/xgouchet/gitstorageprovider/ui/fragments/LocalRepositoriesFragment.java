@@ -14,6 +14,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitstorageprovider.core.account.Account;
+import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
 import fr.xgouchet.gitstorageprovider.core.events.LocalRepositoriesChangedEvent;
 import fr.xgouchet.gitstorageprovider.core.git.LocalRepositoriesManager;
 import fr.xgouchet.gitstorageprovider.ui.adapters.LocalRepositoriesAdapter;
@@ -21,6 +23,8 @@ import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
 
 /**
  * This fragment displays the local mLocalRepositories, and allow local actions :
@@ -38,8 +42,10 @@ public class LocalRepositoriesFragment extends Fragment {
     @InjectView(R.id.fab)
     FloatingActionButton mFAB;
 
-    private LocalRepositoriesAdapter mLocalRepositoriesAdapter;
     private LocalRepositoriesManager mLocalRepositoriesManager;
+    private AccountsManager mAccountsManager;
+
+    private LocalRepositoriesAdapter mLocalRepositoriesAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class LocalRepositoriesFragment extends Fragment {
         GitApplication app = (GitApplication) getActivity().getApplication();
         mBus = app.getBus();
         mLocalRepositoriesManager = app.getLocalRepositoriesManager();
+        mAccountsManager = app.getAccountsManager();
 
         //
         mLocalRepositoriesAdapter = new LocalRepositoriesAdapter();
@@ -96,8 +103,18 @@ public class LocalRepositoriesFragment extends Fragment {
         public void onClick(View view) {
             Toast.makeText(getActivity(), "Cloning Editors (need Credentials", Toast.LENGTH_SHORT).show();
             String repoHttps = "https://github.com/xgouchet/Editors.git";
-            String repoSSH = "git@github.com:xgouchet/Editors.git";
-            mLocalRepositoriesManager.cloneRepositoryAsync("Editors", repoHttps);
+            String repoGit = "git://github.com/xgouchet/Editors.git";
+            String repoSsh = "git@github.com:xgouchet/Editors.git";
+            mLocalRepositoriesManager.cloneRepositoryAsync("Editors", repoGit);
+
+            List<Account> accounts = mAccountsManager.getAccounts();
+            if (accounts.size() == 0){
+                Log.w(TAG, "No account yet ! ");
+                // TODO toast + navigate to accounts tab
+            } else {
+                
+                // TODO display all remote repositories
+            }
         }
     };
 
