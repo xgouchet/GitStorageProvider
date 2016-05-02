@@ -1,6 +1,5 @@
 package fr.xgouchet.gitstorageprovider.ui.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.ui.fragments.OAuthFragment;
 
 

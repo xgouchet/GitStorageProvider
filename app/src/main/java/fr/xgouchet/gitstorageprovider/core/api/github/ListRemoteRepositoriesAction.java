@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.xgouchet.gitstorageprovider.core.account.Account;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.core.git.RemoteRepository;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncRequestAction;
 
@@ -21,9 +21,9 @@ public class ListRemoteRepositoriesAction
         extends AsyncRequestAction<ListRemoteRepositoriesAction.Input, List<RemoteRepository>> {
 
     public static class Input {
-        final Account mAccount;
+        final OAuthAccount mAccount;
 
-        public Input(final @NonNull Account account) {
+        public Input(final @NonNull OAuthAccount account) {
             mAccount = account;
         }
     }

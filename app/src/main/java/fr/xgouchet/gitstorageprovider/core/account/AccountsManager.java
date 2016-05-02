@@ -10,9 +10,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.core.events.AccountsChangedEvent;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfig;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.OAuthConfig;
+import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.core.oauth.RequestAccessTokenAction;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 import fr.xgouchet.gitstorageprovider.utils.actions.ActionQueueExecutor;
@@ -29,7 +30,7 @@ public class AccountsManager {
 
     private final DoubleDeckerBus mBus;
     private final Context mContext;
-    private final List<Account> mAccounts = new ArrayList<>();
+    private final List<OAuthAccount> mAccounts = new ArrayList<>();
 
     private final ActionQueueExecutor mActionQueueExecutor = new ActionQueueExecutor();
 
@@ -39,7 +40,7 @@ public class AccountsManager {
         mBus = bus;
     }
 
-    public List<Account> getAccounts() {
+    public List<OAuthAccount> getAccounts() {
         return mAccounts;
     }
 
@@ -79,7 +80,7 @@ public class AccountsManager {
             // TODO send message : we're oauthenticated
             Log.i(TAG, "Authenticated : " + output);
 
-            AsyncAction<String, Account> action;
+            AsyncAction<String, OAuthAccount> action;
             switch (output.getOAuthConfig().getServiceId()) {
                 case OAuthConfigFactory.SERVICE_GITHUB:
                     action = new fr.xgouchet.gitstorageprovider.core.api.github.GetAccountAction();
@@ -103,11 +104,11 @@ public class AccountsManager {
     /**
      * Listener for UserInfo request
      */
-    private final AsyncActionListener<String, Account>
-            mGetAccountListener = new AsyncActionListener<String, Account>() {
+    private final AsyncActionListener<String, OAuthAccount>
+            mGetAccountListener = new AsyncActionListener<String, OAuthAccount>() {
 
         @Override
-        public void onActionPerformed(final @Nullable Account account) {
+        public void onActionPerformed(final @Nullable OAuthAccount account) {
             Log.i(TAG, "Got account : " + account);
 
             if (account == null) {
@@ -136,10 +137,10 @@ public class AccountsManager {
     /**
      * Listener for persisted account loading
      */
-    private final AsyncActionListener<Context, List<Account>>
-            mLoadPersistedAccountsListener = new AsyncActionListener<Context, List<Account>>() {
+    private final AsyncActionListener<Context, List<OAuthAccount>>
+            mLoadPersistedAccountsListener = new AsyncActionListener<Context, List<OAuthAccount>>() {
         @Override
-        public void onActionPerformed(@Nullable List<Account> output) {
+        public void onActionPerformed(@Nullable List<OAuthAccount> output) {
             mAccounts.clear();
             mAccounts.addAll(output);
             fireAccountsChanged();
@@ -157,7 +158,7 @@ public class AccountsManager {
     /**
      * @param account persists the account
      */
-    private static void persistAccount(final @NonNull Context context, final @NonNull Account account) {
+    private static void persistAccount(final @NonNull Context context, final @NonNull OAuthAccount account) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         SharedPreferences.Editor editor = preferences.edit();
@@ -174,7 +175,7 @@ public class AccountsManager {
      * @return the account or null if none was found
      */
     @Nullable
-    static Account loadPersistedAccount(final @NonNull Context context, final int serviceId) {
+    static OAuthAccount loadPersistedAccount(final @NonNull Context context, final int serviceId) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         String accessToken = preferences.getString(String.format(KEY_ACCESS_TOKEN, serviceId), null);
@@ -183,7 +184,7 @@ public class AccountsManager {
         if ((accessToken == null) || (userName == null)) {
             return null;
         } else {
-            return new Account(serviceId, userName, accessToken);
+            return new OAuthAccount(serviceId, userName, accessToken);
         }
     }
 

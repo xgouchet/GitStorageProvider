@@ -2,19 +2,19 @@ package fr.xgouchet.gitstorageprovider.core.events;
 
 import java.util.List;
 
-import fr.xgouchet.gitstorageprovider.core.account.Account;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
 
 /**
  * @author Xavier Gouchet
  */
 public class AccountsChangedEvent {
-    private final List<Account> mAccounts;
+    private final List<OAuthAccount> mAccounts;
 
-    public AccountsChangedEvent(List<Account> accounts) {
+    public AccountsChangedEvent(List<OAuthAccount> accounts) {
         mAccounts = accounts;
     }
 
-    public List<Account> getAccounts() {
+    public List<OAuthAccount> getAccounts() {
         return mAccounts;
     }
 }

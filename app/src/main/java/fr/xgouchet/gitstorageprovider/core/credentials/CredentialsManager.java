@@ -1,7 +1,6 @@
 package fr.xgouchet.gitstorageprovider.core.credentials;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
@@ -10,8 +9,6 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 
 import java.util.Arrays;
-
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfig;
 
 /**
  * @author Xavier Gouchet

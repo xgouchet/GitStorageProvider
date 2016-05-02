@@ -7,13 +7,14 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
+import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncAction;
 
 /**
  * @author Xavier Gouchet
  */
-public class LoadPersistedAccountsAction implements AsyncAction<Context, List<Account>> {
+public class LoadPersistedAccountsAction implements AsyncAction<Context, List<OAuthAccount>> {
 
     private static final int[] SERVICE_IDS = new int[]{
             OAuthConfigFactory.SERVICE_GITHUB
@@ -21,12 +22,12 @@ public class LoadPersistedAccountsAction implements AsyncAction<Context, List<Ac
 
     @Nullable
     @Override
-    public List<Account> performAction(final @NonNull Context context) throws Exception {
+    public List<OAuthAccount> performAction(final @NonNull Context context) throws Exception {
 
-        List<Account> output = new ArrayList<>();
+        List<OAuthAccount> output = new ArrayList<>();
 
         for (int serviceId : SERVICE_IDS) {
-            Account account = AccountsManager.loadPersistedAccount(context, serviceId);
+            OAuthAccount account = AccountsManager.loadPersistedAccount(context, serviceId);
             if (account != null) {
                 output.add(account);
             }

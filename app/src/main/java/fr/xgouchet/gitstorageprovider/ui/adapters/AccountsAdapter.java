@@ -12,9 +12,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitstorageprovider.core.account.Account;
-import fr.xgouchet.gitstorageprovider.core.credentials.Credential;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
+import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 
 /**
  * @author Xavier Gouchet
@@ -27,7 +26,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.ViewHo
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public Account mAccount;
+        public OAuthAccount mAccount;
 
         private final View mRootView;
 
@@ -46,9 +45,9 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.ViewHo
     }
 
 
-    private List<Account> mAccounts;
+    private List<OAuthAccount> mAccounts;
 
-    public void setAccounts(List<Account> accounts) {
+    public void setAccounts(List<OAuthAccount> accounts) {
         mAccounts = accounts;
         notifyDataSetChanged();
     }
@@ -71,7 +70,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Account account = mAccounts.get(position);
+        OAuthAccount account = mAccounts.get(position);
 
         int icon;
         switch (account.getServiceId()) {

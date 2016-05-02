@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitstorageprovider.core.account.Account;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
 import fr.xgouchet.gitstorageprovider.core.events.NavigationEvent;
 import fr.xgouchet.gitstorageprovider.ui.adapters.CredentialsAdapter;
@@ -85,7 +85,7 @@ public class CredentialsFragment extends Fragment {
     private final View.OnClickListener mFABOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            List<Account> accounts = mAccountsManager.getAccounts();
+            List<OAuthAccount> accounts = mAccountsManager.getAccounts();
             if ((accounts == null) || (accounts.isEmpty())){
                 Toast.makeText(getActivity(), "You need to add an account before creating credentials", Toast.LENGTH_SHORT).show();
                 mBus.postOnUiThread(new NavigationEvent(NavigationEvent.NAV_ACCOUNT));

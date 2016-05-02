@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import fr.xgouchet.gitsp.oauth.OAuthConfig;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncRequestAction;
 
 /**

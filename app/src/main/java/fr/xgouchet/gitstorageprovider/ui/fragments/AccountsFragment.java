@@ -20,10 +20,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitstorageprovider.core.account.Account;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
 import fr.xgouchet.gitstorageprovider.core.events.AccountsChangedEvent;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity;
 import fr.xgouchet.gitstorageprovider.ui.adapters.AccountsAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
@@ -44,7 +44,7 @@ public class AccountsFragment extends Fragment {
     FloatingActionButton mFAB;
 
     private AccountsAdapter mAccountsAdapter;
-    private final List<Account> mAccounts = new ArrayList<>();
+    private final List<OAuthAccount> mAccounts = new ArrayList<>();
 
 
     @Override

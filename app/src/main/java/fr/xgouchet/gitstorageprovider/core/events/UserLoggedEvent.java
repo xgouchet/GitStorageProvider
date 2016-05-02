@@ -1,7 +1,6 @@
 package fr.xgouchet.gitstorageprovider.core.events;
 
-import fr.xgouchet.gitstorageprovider.core.account.Account;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfig;
+import fr.xgouchet.gitsp.oauth.OAuthConfig;
 
 /**
  * @author Xavier Gouchet

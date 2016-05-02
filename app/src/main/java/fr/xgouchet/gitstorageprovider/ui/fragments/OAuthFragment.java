@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfig;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.OAuthConfig;
+import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 
 /**
  * @author Xavier Gouchet

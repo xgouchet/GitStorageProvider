@@ -1,4 +1,4 @@
-package fr.xgouchet.gitstorageprovider.core.oauth;
+package fr.xgouchet.gitsp.oauth;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;

@@ -1,4 +1,4 @@
-package fr.xgouchet.gitstorageprovider.ui.activities;
+package fr.xgouchet.gitsp.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,10 +8,11 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 import fr.xgouchet.gitstorageprovider.R;
+
+import static butterknife.ButterKnife.bind;
 
 /**
  * @author Xavier Gouchet
@@ -20,7 +21,7 @@ public class TestActivity extends FragmentActivity {
 
     private static final int READ_REQUEST_CODE = 0x42;
 
-    @InjectView(R.id.text_document_info)
+    @BindView(R.id.text_document_info)
     public TextView mTextDocumentInfo;
 
     @Override
@@ -28,7 +29,7 @@ public class TestActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_test);
-        ButterKnife.inject(this);
+        bind(this);
     }
 
     @Override

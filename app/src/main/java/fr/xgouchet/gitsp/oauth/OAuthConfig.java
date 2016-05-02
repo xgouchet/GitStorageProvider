@@ -1,4 +1,4 @@
-package fr.xgouchet.gitstorageprovider.core.oauth;
+package fr.xgouchet.gitsp.oauth;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;

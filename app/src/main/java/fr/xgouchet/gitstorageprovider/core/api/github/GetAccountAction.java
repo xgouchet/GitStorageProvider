@@ -7,13 +7,13 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import fr.xgouchet.gitstorageprovider.core.account.Account;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncRequestAction;
 
 /**
  * @author Xavier Gouchet
  */
-public class GetAccountAction extends AsyncRequestAction<String, Account> {
+public class GetAccountAction extends AsyncRequestAction<String, OAuthAccount> {
     @NonNull
     @Override
     protected URL getRequestUrl(@NonNull String accessToken) throws Exception {
@@ -25,11 +25,11 @@ public class GetAccountAction extends AsyncRequestAction<String, Account> {
     }
 
     @Override
-    protected Account handleResponse(@NonNull String response, @NonNull String accessToken) throws Exception {
+    protected OAuthAccount handleResponse(@NonNull String response, @NonNull String accessToken) throws Exception {
 
         JSONObject object = new JSONObject(response);
         String userName = object.getString("login");
 
-        return new Account(GithubOAuthConfig.SERVICE_ID, userName, accessToken);
+        return new OAuthAccount(GithubOAuthConfig.SERVICE_ID, userName, accessToken);
     }
 }

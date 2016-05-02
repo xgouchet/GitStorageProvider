@@ -3,8 +3,8 @@ package fr.xgouchet.gitstorageprovider.core.api.github;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfig;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.OAuthConfig;
+import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 
 /**
  * @author Xavier Gouchet
