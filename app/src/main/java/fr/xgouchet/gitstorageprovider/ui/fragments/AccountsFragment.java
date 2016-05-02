@@ -2,16 +2,15 @@ package fr.xgouchet.gitstorageprovider.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -24,15 +23,10 @@ import fr.xgouchet.gitstorageprovider.R;
 import fr.xgouchet.gitstorageprovider.core.account.Account;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
 import fr.xgouchet.gitstorageprovider.core.events.AccountsChangedEvent;
-import fr.xgouchet.gitstorageprovider.core.events.LocalRepositoriesChangedEvent;
-import fr.xgouchet.gitstorageprovider.core.events.UserLoggedEvent;
 import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity;
-import fr.xgouchet.gitstorageprovider.ui.activities.MainActivity;
 import fr.xgouchet.gitstorageprovider.ui.adapters.AccountsAdapter;
-import fr.xgouchet.gitstorageprovider.ui.adapters.CredentialsAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
-import fr.xgouchet.gitstorageprovider.utils.actions.AsyncActionListener;
 
 /**
  * This fragment displays the accounts the user is logged into
@@ -78,7 +72,6 @@ public class AccountsFragment extends Fragment {
         // TODO setup empty view
 
         // attach FAB to the recycler view
-        mFAB.attachToRecyclerView(mRecyclerView);
         mFAB.setOnClickListener(mFABOnClickListener);
 
         return root;

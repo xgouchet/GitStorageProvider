@@ -1,7 +1,7 @@
 package fr.xgouchet.gitstorageprovider.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,14 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.melnykov.fab.FloatingActionButton;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;
-import fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity;
+import fr.xgouchet.gitstorageprovider.core.account.Account;
+import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
+import fr.xgouchet.gitstorageprovider.core.events.NavigationEvent;
 import fr.xgouchet.gitstorageprovider.ui.adapters.CredentialsAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 
@@ -36,6 +37,7 @@ public class CredentialsFragment extends Fragment {
     FloatingActionButton mFAB;
 
     private RecyclerView.Adapter mCredentialsAdapter;
+    private AccountsManager mAccountsManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class CredentialsFragment extends Fragment {
 
         // Get the common event bus
         mBus = ((GitApplication) getActivity().getApplication()).getBus();
+        mAccountsManager = ((GitApplication) getActivity().getApplication()).getAccountsManager();
         mCredentialsAdapter = new CredentialsAdapter();
     }
 
@@ -58,7 +61,6 @@ public class CredentialsFragment extends Fragment {
         // TODO setup empty view
 
         // attach FAB to the recycler view
-        mFAB.attachToRecyclerView(mRecyclerView);
         mFAB.setOnClickListener(mFABOnClickListener);
 
         return root;
@@ -83,7 +85,14 @@ public class CredentialsFragment extends Fragment {
     private final View.OnClickListener mFABOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(), "TODO Generate SSH keys", Toast.LENGTH_SHORT).show();
+            List<Account> accounts = mAccountsManager.getAccounts();
+            if ((accounts == null) || (accounts.isEmpty())){
+                Toast.makeText(getActivity(), "You need to add an account before creating credentials", Toast.LENGTH_SHORT).show();
+                mBus.postOnUiThread(new NavigationEvent(NavigationEvent.NAV_ACCOUNT));
+                return;
+            }
+
+
         }
     };
 

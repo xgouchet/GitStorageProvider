@@ -1,18 +1,7 @@
 package fr.xgouchet.gitstorageprovider.core.api.github;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfig;
 import fr.xgouchet.gitstorageprovider.core.oauth.OAuthConfigFactory;

@@ -1,6 +1,7 @@
 package fr.xgouchet.gitstorageprovider.ui.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
@@ -17,14 +22,10 @@ import fr.xgouchet.gitstorageprovider.R;
 import fr.xgouchet.gitstorageprovider.core.account.Account;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
 import fr.xgouchet.gitstorageprovider.core.events.LocalRepositoriesChangedEvent;
+import fr.xgouchet.gitstorageprovider.core.events.NavigationEvent;
 import fr.xgouchet.gitstorageprovider.core.git.LocalRepositoriesManager;
 import fr.xgouchet.gitstorageprovider.ui.adapters.LocalRepositoriesAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
-
-import com.melnykov.fab.FloatingActionButton;
-import com.squareup.otto.Subscribe;
-
-import java.util.List;
 
 /**
  * This fragment displays the local mLocalRepositories, and allow local actions :
@@ -73,7 +74,6 @@ public class LocalRepositoriesFragment extends Fragment {
         // TODO setup empty view
 
         // attach FAB to the recycler view
-        mFAB.attachToRecyclerView(mRecyclerView);
         mFAB.setOnClickListener(mFABOnClickListener);
 
         return root;
@@ -101,18 +101,20 @@ public class LocalRepositoriesFragment extends Fragment {
     private final View.OnClickListener mFABOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(), "Cloning Editors (need Credentials", Toast.LENGTH_SHORT).show();
-            String repoHttps = "https://github.com/xgouchet/Editors.git";
-            String repoGit = "git://github.com/xgouchet/Editors.git";
-            String repoSsh = "git@github.com:xgouchet/Editors.git";
-            mLocalRepositoriesManager.cloneRepositoryAsync("Editors", repoGit);
+
+//            Toast.makeText(getActivity(), "Cloning Editors (need Credentials", Toast.LENGTH_SHORT).show();
+//            String repoHttps = "https://github.com/xgouchet/Editors.git";
+//            String repoGit = "git://github.com/xgouchet/Editors.git";
+//            String repoSsh = "git@github.com:xgouchet/Editors.git";
+//            mLocalRepositoriesManager.cloneRepositoryAsync("Editors", repoGit);
 
             List<Account> accounts = mAccountsManager.getAccounts();
             if (accounts.size() == 0){
-                Log.w(TAG, "No account yet ! ");
-                // TODO toast + navigate to accounts tab
+                Toast.makeText(getActivity(), "You need to set up an account and add credentials", Toast.LENGTH_SHORT).show();
+                mBus.postOnUiThread(new NavigationEvent(NavigationEvent.NAV_ACCOUNT));
             } else {
-                
+
+                // TODO check credentials
                 // TODO display all remote repositories
             }
         }

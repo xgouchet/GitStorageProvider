@@ -65,4 +65,9 @@ public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.
 
         return new LocalRepository(input.mLocalPath, remotes, status);
     }
+
+    @Override
+    public String toString(){
+        return "CloneRepositoryAction";
+    }
 }

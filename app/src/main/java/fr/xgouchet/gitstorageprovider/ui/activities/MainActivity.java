@@ -1,8 +1,8 @@
 package fr.xgouchet.gitstorageprovider.ui.activities;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -10,13 +10,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitstorageprovider.core.account.Account;
-import fr.xgouchet.gitstorageprovider.core.events.UserLoggedEvent;
+import fr.xgouchet.gitstorageprovider.core.events.NavigationEvent;
 import fr.xgouchet.gitstorageprovider.ui.fragments.AccountsFragment;
 import fr.xgouchet.gitstorageprovider.ui.fragments.CredentialsFragment;
 import fr.xgouchet.gitstorageprovider.ui.fragments.LocalRepositoriesFragment;
@@ -38,6 +40,23 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
 
 
     private DoubleDeckerBus mBus;
+    private Object mEventHandler = new Object() {
+        @Subscribe
+        public void onNavigate(final @NonNull NavigationEvent event) {
+            int page = -1;
+            switch (event.getNav()) {
+                case NavigationEvent.NAV_ACCOUNT:
+                    page = PAGE_ACCOUNTS;
+                    break;
+                case NavigationEvent.NAV_CREDENTIALS:
+                    page = PAGE_CREDENTIALS;
+                    break;
+            }
+            if (page >= 0) {
+                mViewPager.setCurrentItem(page, true);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +78,18 @@ public class MainActivity extends FragmentActivity implements Toolbar.OnMenuItem
         mViewPager.setAdapter(new SamplePagerAdapter(getSupportFragmentManager()));
         mSlidingTabLayout.setViewPager(mViewPager);
         mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.primary_dark));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mBus.register(mEventHandler);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBus.unregister(mEventHandler);
     }
 
     private static final int PAGE_LOCAL_REPOS = 0;
