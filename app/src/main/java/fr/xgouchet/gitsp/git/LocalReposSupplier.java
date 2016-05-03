@@ -1,8 +1,12 @@
-package fr.xgouchet.gitstorageprovider.core.git;
+package fr.xgouchet.gitsp.git;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.google.android.agera.Result;
+import com.google.android.agera.Supplier;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
@@ -16,33 +20,35 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import fr.xgouchet.gitsp.git.LocalRepo;
-import fr.xgouchet.gitstorageprovider.utils.actions.AsyncAction;
-
 /**
- * An action that will check each subfolders in the given folder, and return a list of
- * LocalRepo objects properly filled
- *
  * @author Xavier Gouchet
  */
-public class VerifyLocalRepositoriesAction implements AsyncAction<File, List<LocalRepo>> {
+public class LocalReposSupplier implements Supplier<Result<List<LocalRepo>>> {
 
-    private static final String TAG = VerifyLocalRepositoriesAction.class.getSimpleName();
+    private static final String WORKSPACE_NAME = "workspace";
 
-    @Nullable
+    private static final String TAG = LocalReposSupplier.class.getSimpleName();
+
+    @NonNull
+    private final File localWorkspaceRoot;
+
+    public LocalReposSupplier(@NonNull Context context) {
+
+        localWorkspaceRoot = new File(context.getFilesDir(), WORKSPACE_NAME);
+        if (!localWorkspaceRoot.exists()) {
+            localWorkspaceRoot.mkdirs();
+        }
+    }
+
+    @NonNull
     @Override
-    public List<LocalRepo> performAction(final @NonNull File input) throws Exception {
+    public Result<List<LocalRepo>> get() {
         List<LocalRepo> results = new ArrayList<>();
 
-        if (!input.isDirectory()) {
-            Log.w(TAG, "input is not a directory, no result");
-            return results;
-        }
-
-        File[] candidates = input.listFiles();
+        File[] candidates = localWorkspaceRoot.listFiles();
         if (candidates == null) {
             Log.i(TAG, "No candidates");
-            return results;
+            return Result.present(results);
         }
 
         for (File candidate : candidates) {
@@ -62,7 +68,7 @@ public class VerifyLocalRepositoriesAction implements AsyncAction<File, List<Loc
             }
         }
 
-        return results;
+        return Result.present(results);
     }
 
     @Nullable

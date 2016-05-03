@@ -9,11 +9,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import fr.xgouchet.gitstorageprovider.R;
+import butterknife.BindView;
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitstorageprovider.R;
+
+import static butterknife.ButterKnife.bind;
 
 /**
  * @author Xavier Gouchet
@@ -30,16 +31,16 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.ViewHo
 
         private final View mRootView;
 
-        @InjectView(android.R.id.title)
+        @BindView(android.R.id.title)
         TextView mTitleView;
 
-        @InjectView(android.R.id.icon)
+        @BindView(android.R.id.icon)
         ImageView mIconView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mRootView = itemView;
-            ButterKnife.inject(this, itemView);
+            bind(this, itemView);
         }
 
     }

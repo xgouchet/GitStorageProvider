@@ -8,10 +8,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import fr.xgouchet.gitstorageprovider.R;
 import fr.xgouchet.gitstorageprovider.core.credentials.Credential;
+
+import static butterknife.ButterKnife.bind;
 
 /**
  * @author Xavier Gouchet
@@ -28,14 +29,14 @@ public class CredentialsAdapter extends RecyclerView.Adapter<CredentialsAdapter.
 
         private final View mRootView;
 
-        @InjectView(android.R.id.title)
+        @BindView(android.R.id.title)
         TextView mTitleView;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
             mRootView = itemView;
-            ButterKnife.inject(this, itemView);
+            bind(this, itemView);
         }
 
     }

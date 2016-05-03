@@ -15,17 +15,18 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
 import fr.xgouchet.gitstorageprovider.core.events.LocalRepositoriesChangedEvent;
 import fr.xgouchet.gitstorageprovider.core.events.NavigationEvent;
 import fr.xgouchet.gitstorageprovider.core.git.LocalRepositoriesManager;
 import fr.xgouchet.gitstorageprovider.ui.adapters.LocalRepositoriesAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
+
+import static butterknife.ButterKnife.bind;
 
 /**
  * This fragment displays the local mLocalRepositories, and allow local actions :
@@ -38,9 +39,9 @@ public class LocalRepositoriesFragment extends Fragment {
     private static final String TAG = LocalRepositoriesFragment.class.getSimpleName();
     private DoubleDeckerBus mBus;
 
-    @InjectView(android.R.id.list)
+    @BindView(android.R.id.list)
     RecyclerView mRecyclerView;
-    @InjectView(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton mFAB;
 
     private LocalRepositoriesManager mLocalRepositoriesManager;
@@ -64,8 +65,8 @@ public class LocalRepositoriesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_list_fab, container, false);
-        ButterKnife.inject(this, root);
+        View root = inflater.inflate(R.layout.default_ideal_view, container, false);
+        bind(this, root);
 
         // set recycler view layout manager
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -109,7 +110,7 @@ public class LocalRepositoriesFragment extends Fragment {
 //            mLocalRepositoriesManager.cloneRepositoryAsync("Editors", repoGit);
 
             List<OAuthAccount> accounts = mAccountsManager.getAccounts();
-            if (accounts.size() == 0){
+            if (accounts.size() == 0) {
                 Toast.makeText(getActivity(), "You need to set up an account and add credentials", Toast.LENGTH_SHORT).show();
                 mBus.postOnUiThread(new NavigationEvent(NavigationEvent.NAV_ACCOUNT));
             } else {

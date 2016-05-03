@@ -64,7 +64,8 @@ public class RequestAccessTokenAction extends AsyncRequestAction<RequestAccessTo
     @NonNull
     @Override
     protected URL getRequestUrl(final @NonNull Input input) throws Exception {
-        return new URL(input.mConfig.getAccessTokenRequestUri());
+//        return new URL(input.mConfig.getAccessTokenRequestUri());
+        return null;
     }
 
     @Override
@@ -87,12 +88,12 @@ public class RequestAccessTokenAction extends AsyncRequestAction<RequestAccessTo
         }
 
         postParams.append("&client_id=");
-        postParams.append(URLEncoder.encode(input.mConfig.getClientId(), "UTF-8"));
+//        postParams.append(URLEncoder.encode(input.mConfig.getClientId(), "UTF-8"));
 
-        if (input.mConfig.getClientSecret() != null) {
-            postParams.append("&client_secret=");
-            postParams.append(URLEncoder.encode(input.mConfig.getClientSecret(), "UTF-8"));
-        }
+//        if (input.mConfig.getClientSecret() != null) {
+//            postParams.append("&client_secret=");
+//            postParams.append(URLEncoder.encode(input.mConfig.getClientSecret(), "UTF-8"));
+//        }
         Log.i(TAG, postParams.toString());
 
         //  write params to the connection output stream

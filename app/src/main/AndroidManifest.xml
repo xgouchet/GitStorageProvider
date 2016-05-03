@@ -1,41 +1,42 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="fr.xgouchet.gitstorageprovider">
+    package="fr.xgouchet.gitstorageprovider">
 
     <!-- Prevent other apps than system to explore the storage provider -->
-    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
 
     <!-- Internet of course to clone, pull and push -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- For tests only, do not use that in production -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
         android:name=".GitApplication"
-        android:label="@string/app_name"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
         <!-- Local Git repository Provider -->
         <provider
             android:name="fr.xgouchet.gitstorageprovider.core.providers.GitProvider"
             android:authorities="${applicationId}.provider.documents"
-            android:grantUriPermissions="true"
-            android:exported="true"
             android:enabled="true"
+            android:exported="true"
+            android:grantUriPermissions="true"
             android:permission="android.permission.MANAGE_DOCUMENTS">
             <intent-filter>
-                <action android:name="android.content.action.DOCUMENTS_PROVIDER"/>
+                <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
             </intent-filter>
         </provider>
 
         <!-- Main Activity -->
-
-        <!-- Test Activity -->
-        <activity android:name="fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity"
-                  android:label="@string/title_activity_login">
+        <activity android:name="fr.xgouchet.gitsp.ui.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

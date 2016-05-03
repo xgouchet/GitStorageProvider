@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">GitA (dbg)</string>
+
+    <string name="title_activity_test">GitSP Test</string>
 </resources>

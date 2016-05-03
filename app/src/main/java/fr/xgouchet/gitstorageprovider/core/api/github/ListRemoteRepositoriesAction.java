@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
-import fr.xgouchet.gitstorageprovider.core.git.RemoteRepository;
+import fr.xgouchet.gitsp.git.RemoteRepo;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncRequestAction;
 
 /**
  * @author Xavier Gouchet
  */
 public class ListRemoteRepositoriesAction
-        extends AsyncRequestAction<ListRemoteRepositoriesAction.Input, List<RemoteRepository>> {
+        extends AsyncRequestAction<ListRemoteRepositoriesAction.Input, List<RemoteRepo>> {
 
     public static class Input {
         final OAuthAccount mAccount;
@@ -41,11 +41,11 @@ public class ListRemoteRepositoriesAction
     }
 
     @Override
-    protected List<RemoteRepository> handleResponse(final @NonNull String response,
-                                                    final @NonNull Input input) throws Exception {
+    protected List<RemoteRepo> handleResponse(final @NonNull String response,
+                                              final @NonNull Input input) throws Exception {
         JSONArray array = new JSONArray(response);
         int count = array.length();
-        List<RemoteRepository> output = new ArrayList<>(count);
+        List<RemoteRepo> output = new ArrayList<>(count);
 
         for (int i = 0; i < count; ++i) {
             // {
@@ -60,7 +60,7 @@ public class ListRemoteRepositoriesAction
             JSONObject repository = array.getJSONObject(i);
             String name = repository.getString("name");
             String url = repository.getString("git_url");
-            RemoteRepository repo = new RemoteRepository(input.mAccount.getServiceId(), name, url);
+            RemoteRepo repo = new RemoteRepo(input.mAccount.getServiceId(), name, url);
             output.add(repo);
         }
 

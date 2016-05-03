@@ -13,14 +13,15 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import java.io.File;
 import java.util.Collection;
 
+import fr.xgouchet.gitsp.git.LocalRepo;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncAction;
 
 /**
- * TODO return a LocalRepository
+ * TODO return a LocalRepo
  *
  * @author Xavier Gouchet
  */
-public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.Input, LocalRepository> {
+public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.Input, LocalRepo> {
 
     /**
      * The expected input for a clone action
@@ -45,7 +46,7 @@ public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.
 
     @Nullable
     @Override
-    public LocalRepository performAction(final @NonNull Input input) throws Exception {
+    public LocalRepo performAction(final @NonNull Input input) throws Exception {
 
         // prepare the clone command
         CloneCommand cloneCommand = Git.cloneRepository()
@@ -63,7 +64,7 @@ public class CloneRepositoryAction implements AsyncAction<CloneRepositoryAction.
         Collection<Ref> remotes = git.lsRemote().setRemote(Constants.DEFAULT_REMOTE_NAME).call();
 
 
-        return new LocalRepository(input.mLocalPath, remotes, status);
+        return new LocalRepo(input.mLocalPath, remotes, status);
     }
 
     @Override

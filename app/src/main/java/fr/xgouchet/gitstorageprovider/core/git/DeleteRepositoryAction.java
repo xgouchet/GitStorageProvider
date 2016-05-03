@@ -1,19 +1,19 @@
 package fr.xgouchet.gitstorageprovider.core.git;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.io.File;
 
+import fr.xgouchet.gitsp.git.LocalRepo;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncVoidAction;
 
 /**
  * @author Xavier Gouchet
  */
-public class DeleteRepositoryAction extends AsyncVoidAction<LocalRepository> {
+public class DeleteRepositoryAction extends AsyncVoidAction<LocalRepo> {
 
     @Override
-    public void performVoidAction(final @NonNull LocalRepository input) throws Exception {
+    public void performVoidAction(final @NonNull LocalRepo input) throws Exception {
         File repo = input.getFolder();
         if (repo.isDirectory()) {
             deleteRecursive(repo);

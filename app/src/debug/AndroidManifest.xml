@@ -6,10 +6,11 @@
         <!-- Test Activity -->
         <activity
             android:name="fr.xgouchet.gitsp.ui.TestActivity"
+            android:icon="@mipmap/ic_launcher_client"
             android:label="@string/title_activity_test">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

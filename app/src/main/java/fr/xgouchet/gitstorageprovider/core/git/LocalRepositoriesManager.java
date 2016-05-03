@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.xgouchet.gitsp.git.LocalRepo;
 import fr.xgouchet.gitstorageprovider.utils.actions.ActionQueueExecutor;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncActionListener;
 import fr.xgouchet.gitstorageprovider.core.credentials.CredentialsManager;
@@ -33,7 +34,7 @@ public class LocalRepositoriesManager {
     private final File mLocalWorkspace;
 
     private final ActionQueueExecutor mActionQueueExecutor = new ActionQueueExecutor();
-    private final List<LocalRepository> mLocalRepositories = new ArrayList<>();
+    private final List<LocalRepo> mLocalRepositories = new ArrayList<>();
 
 
     public LocalRepositoriesManager(final @NonNull Context context,
@@ -89,12 +90,12 @@ public class LocalRepositoriesManager {
     /**
      * Listener for clone actions
      */
-    private final AsyncActionListener<File, List<LocalRepository>>
-            mVerifyActionListener = new AsyncActionListener<File, List<LocalRepository>>() {
+    private final AsyncActionListener<File, List<LocalRepo>>
+            mVerifyActionListener = new AsyncActionListener<File, List<LocalRepo>>() {
 
         @Override
-        public void onActionPerformed(final @Nullable List<LocalRepository> output) {
-            for (LocalRepository candidates : output) {
+        public void onActionPerformed(final @Nullable List<LocalRepo> output) {
+            for (LocalRepo candidates : output) {
                 if (mLocalRepositories.contains(candidates)) {
                     mLocalRepositories.remove(candidates);
                 }
@@ -113,10 +114,10 @@ public class LocalRepositoriesManager {
     /**
      * Listener for clone actions
      */
-    private final AsyncActionListener<CloneRepositoryAction.Input, LocalRepository>
-            mCloneActionListener = new AsyncActionListener<CloneRepositoryAction.Input, LocalRepository>() {
+    private final AsyncActionListener<CloneRepositoryAction.Input, LocalRepo>
+            mCloneActionListener = new AsyncActionListener<CloneRepositoryAction.Input, LocalRepo>() {
         @Override
-        public void onActionPerformed(final @Nullable LocalRepository output) {
+        public void onActionPerformed(final @Nullable LocalRepo output) {
             if (mLocalRepositories.contains(output)) {
                 mLocalRepositories.remove(output);
             }
@@ -128,7 +129,7 @@ public class LocalRepositoriesManager {
         public void onActionFailed(final @NonNull CloneRepositoryAction.Input input,
                                    final @NonNull Exception e) {
             Log.e(TAG, "Clone failed", e);
-            LocalRepository fakeRepo = new LocalRepository(input.getLocalPath());
+            LocalRepo fakeRepo = new LocalRepo(input.getLocalPath());
             mActionQueueExecutor.queueAction(new DeleteRepositoryAction(), fakeRepo, mDeleteActionListener);
         }
     };
@@ -136,15 +137,15 @@ public class LocalRepositoriesManager {
     /**
      * Listener for clone actions
      */
-    private final AsyncActionListener<LocalRepository, Void>
-            mDeleteActionListener = new AsyncActionListener<LocalRepository, Void>() {
+    private final AsyncActionListener<LocalRepo, Void>
+            mDeleteActionListener = new AsyncActionListener<LocalRepo, Void>() {
         @Override
         public void onActionPerformed(final @Nullable Void output) {
             Log.d(TAG, "Delete successful");
         }
 
         @Override
-        public void onActionFailed(final @NonNull LocalRepository input,
+        public void onActionFailed(final @NonNull LocalRepo input,
                                    final @NonNull Exception e) {
             Log.e(TAG, "Delete failed", e);
         }

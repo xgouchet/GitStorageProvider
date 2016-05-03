@@ -1,22 +1,21 @@
 package fr.xgouchet.gitstorageprovider.core.events;
 
 import java.util.List;
-import java.util.Set;
 
-import fr.xgouchet.gitstorageprovider.core.git.LocalRepository;
+import fr.xgouchet.gitsp.git.LocalRepo;
 
 /**
  * @author Xavier Gouchet
  */
 public class LocalRepositoriesChangedEvent {
 
-    private final List<LocalRepository> mLocalRepositories;
+    private final List<LocalRepo> mLocalRepositories;
 
-    public LocalRepositoriesChangedEvent(List<LocalRepository> localRepositories) {
+    public LocalRepositoriesChangedEvent(List<LocalRepo> localRepositories) {
         mLocalRepositories = localRepositories;
     }
 
-    public List<LocalRepository> getLocalRepositories() {
+    public List<LocalRepo> getLocalRepositories() {
         return mLocalRepositories;
     }
 }

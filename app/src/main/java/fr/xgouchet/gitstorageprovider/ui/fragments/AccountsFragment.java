@@ -16,17 +16,18 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
+import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.GitApplication;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
 import fr.xgouchet.gitstorageprovider.core.events.AccountsChangedEvent;
-import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity;
 import fr.xgouchet.gitstorageprovider.ui.adapters.AccountsAdapter;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
+
+import static butterknife.ButterKnife.bind;
 
 /**
  * This fragment displays the accounts the user is logged into
@@ -38,9 +39,9 @@ public class AccountsFragment extends Fragment {
     private DoubleDeckerBus mBus;
     private AccountsManager mAccountsManager;
 
-    @InjectView(android.R.id.list)
+    @BindView(android.R.id.list)
     RecyclerView mRecyclerView;
-    @InjectView(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton mFAB;
 
     private AccountsAdapter mAccountsAdapter;
@@ -62,8 +63,8 @@ public class AccountsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_list_fab, container, false);
-        ButterKnife.inject(this, root);
+        View root = inflater.inflate(R.layout.default_ideal_view, container, false);
+        bind(this, root);
 
         // set recycler view layout manager
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

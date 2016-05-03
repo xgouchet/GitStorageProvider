@@ -30,6 +30,13 @@ public class TestActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_test);
         bind(this);
+
+//        findViewById(R.id.button_open).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onOpenDocument();
+//            }
+//        });
     }
 
     @Override
@@ -66,8 +73,7 @@ public class TestActivity extends FragmentActivity {
     }
 
     @OnClick(R.id.button_open)
-    public void onOpenDocument(View view) {
-
+    public void onSubmit() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/*");

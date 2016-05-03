@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
-import fr.xgouchet.gitstorageprovider.R;
 import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitstorageprovider.R;
 import fr.xgouchet.gitstorageprovider.ui.fragments.OAuthFragment;
 
 
@@ -42,7 +42,7 @@ public class LoginActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_main);
     }
 
 
@@ -59,10 +59,10 @@ public class LoginActivity extends FragmentActivity {
         OAuthFragment fragment = new OAuthFragment();
         fragment.setArguments(args);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.login_container, fragment)
-                .commit();
+//        getSupportFragmentManager()
+//                .beginTransaction()
+////                .add(R.id.login_container, fragment)
+//                .commit();
     }
 
 

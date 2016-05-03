@@ -1,4 +1,4 @@
-package fr.xgouchet.gitstorageprovider.core.git;
+package fr.xgouchet.gitsp.git;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +15,7 @@ import java.util.Collections;
  *
  * @author Xavier Gouchet
  */
-public class LocalRepository {
+public class LocalRepo {
 
     private final File mFolder;
     private final String mName;
@@ -23,13 +23,13 @@ public class LocalRepository {
     private Status mStatus;
     private int mAhead, mBehind;
 
-    public LocalRepository(File folder) {
+    public LocalRepo(File folder) {
         this(folder, Collections.<Ref>emptyList(), null);
     }
 
-    public LocalRepository(final @NonNull File folder,
-                           final @NonNull Collection<Ref> remote,
-                           final @Nullable Status status) {
+    public LocalRepo(final @NonNull File folder,
+                     final @NonNull Collection<Ref> remote,
+                     final @Nullable Status status) {
         mFolder = folder;
         mName = folder.getName();
         mRemote = remote;
@@ -56,7 +56,7 @@ public class LocalRepository {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        LocalRepository that = (LocalRepository) o;
+        LocalRepo that = (LocalRepo) o;
 
         return (mFolder.equals(that.mFolder));
     }
