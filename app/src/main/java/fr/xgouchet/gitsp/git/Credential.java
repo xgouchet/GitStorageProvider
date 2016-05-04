@@ -1,11 +1,13 @@
-package fr.xgouchet.gitstorageprovider.core.credentials;
+package fr.xgouchet.gitsp.git;
+
+import org.eclipse.jgit.transport.CredentialsProvider;
 
 /**
  * Parent class for all known credentials (SSH, HTTP user-password, ...)
  *
  * @author Xavier Gouchet
  */
-public abstract class Credential {
+public abstract class Credential extends CredentialsProvider {
 
     private final String mHost;
     private final String mDisplayName;
@@ -22,4 +24,6 @@ public abstract class Credential {
     public String getHost() {
         return mHost;
     }
+
+
 }

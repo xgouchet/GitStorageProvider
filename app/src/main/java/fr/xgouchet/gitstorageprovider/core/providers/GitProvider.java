@@ -53,10 +53,11 @@ public class GitProvider extends DocumentsProvider {
 //        }
 
         // TODO add one root per local repository
+
         final MatrixCursor.RowBuilder row = result.newRow();
         row.add(DocumentsContract.Root.COLUMN_ROOT_ID, "Foo");
         row.add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, "gita://Foo/");
-        row.add(DocumentsContract.Root.COLUMN_TITLE, getContext().getString(R.string.root_title));
+        row.add(DocumentsContract.Root.COLUMN_TITLE, getContext().getString(R.string.storage_root_title));
         row.add(DocumentsContract.Root.COLUMN_SUMMARY, "Foo △");
 
         // Flags to describe when this root should be presented

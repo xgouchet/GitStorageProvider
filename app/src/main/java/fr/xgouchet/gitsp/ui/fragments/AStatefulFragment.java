@@ -1,15 +1,19 @@
 package fr.xgouchet.gitsp.ui.fragments;
 
 import android.app.Fragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import fr.xgouchet.gitstorageprovider.R;
 
 import static butterknife.ButterKnife.bind;
@@ -35,6 +39,9 @@ public abstract class AStatefulFragment extends Fragment {
     @BindView(R.id.state_container)
     FrameLayout container;
 
+    @BindView(R.id.state_fab)
+    FloatingActionButton fab;
+
     private View emptyView, loadingView, errorView, idealView;
 
     @Override
@@ -47,8 +54,30 @@ public abstract class AStatefulFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_stateful, container, false);
         bind(this, root);
+
+        prepareFab();
+
         setCurrentState(EMPTY);
         return root;
+    }
+
+    private void prepareFab() {
+        //noinspection ResourceType
+        fab.setVisibility(getFabVisibility(state));
+        fab.setImageDrawable(getFabDrawable(state));
+    }
+
+    @OnClick(R.id.state_fab)
+    public final void fabClicked() {
+        onFabClicked(state);
+    }
+
+    /**
+     * Called when the user pressed the FAB
+     *
+     * @param state the current state
+     */
+    protected void onFabClicked(@State int state) {
     }
 
     /*
@@ -88,15 +117,26 @@ public abstract class AStatefulFragment extends Fragment {
      */
 
     /**
+     * @param state
+     * @return whether the FAB should be visible
+     */
+    protected int getFabVisibility(@State int state) {
+        return View.GONE;
+    }
+
+    @NonNull
+    protected Drawable getFabDrawable(@State int state) {
+        return ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_add);
+    }
+
+    /**
      * Called once, the first time the empty view is required
      *
+     * @param parent the parent view
      * @return the view to display when the current fragment's state is empty
      */
     @NonNull
-    protected View createEmptyView() {
-        return LayoutInflater.from(getActivity())
-                .inflate(R.layout.default_empty_view, container, false);
-    }
+    protected abstract View createEmptyView(@NonNull ViewGroup parent);
 
     /**
      * Called every time the empty view needs to be displayed.
@@ -110,13 +150,11 @@ public abstract class AStatefulFragment extends Fragment {
     /**
      * Called once, the first time the loading view is required
      *
+     * @param parent the parent view
      * @return the view to display when the current fragment's state is loading
      */
     @NonNull
-    protected View createLoadingView() {
-        return LayoutInflater.from(getActivity())
-                .inflate(R.layout.default_loading_view, container, false);
-    }
+    protected abstract View createLoadingView(@NonNull ViewGroup parent);
 
     /**
      * Called every time the loading view needs to be displayed.
@@ -130,13 +168,11 @@ public abstract class AStatefulFragment extends Fragment {
     /**
      * Called once, the first time the error view is required
      *
+     * @param parent the parent view
      * @return the view to display when the current fragment's state is error
      */
     @NonNull
-    protected View createErrorView() {
-        return LayoutInflater.from(getActivity())
-                .inflate(R.layout.default_empty_view, container, false);
-    }
+    protected abstract View createErrorView(@NonNull ViewGroup parent);
 
     /**
      * Called every time the error view needs to be displayed.
@@ -150,10 +186,11 @@ public abstract class AStatefulFragment extends Fragment {
     /**
      * Called once, the first time the error view is required
      *
+     * @param parent the parent view
      * @return the view to display when the current fragment's state is error
      */
     @NonNull
-    protected abstract View createIdealView();
+    protected abstract View createIdealView(@NonNull ViewGroup parent);
 
     /**
      * Called every time the ideal view needs to be displayed.
@@ -171,7 +208,7 @@ public abstract class AStatefulFragment extends Fragment {
     @NonNull
     private View getEmptyView() {
         if (emptyView == null) {
-            emptyView = createEmptyView();
+            emptyView = createEmptyView(container);
         }
         updateEmptyView(emptyView);
         return emptyView;
@@ -180,7 +217,7 @@ public abstract class AStatefulFragment extends Fragment {
     @NonNull
     private View getLoadingView() {
         if (loadingView == null) {
-            loadingView = createLoadingView();
+            loadingView = createLoadingView(container);
         }
         updateLoadingView(loadingView);
         return loadingView;
@@ -190,7 +227,7 @@ public abstract class AStatefulFragment extends Fragment {
     @NonNull
     private View getErrorView() {
         if (errorView == null) {
-            errorView = createErrorView();
+            errorView = createErrorView(container);
         }
         updateErrorView(errorView);
         return errorView;
@@ -199,9 +236,11 @@ public abstract class AStatefulFragment extends Fragment {
     @NonNull
     private View getIdealView() {
         if (idealView == null) {
-            idealView = createErrorView();
+            idealView = createIdealView(container);
         }
         updateIdealView(idealView);
         return idealView;
     }
+
+
 }

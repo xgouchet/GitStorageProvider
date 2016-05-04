@@ -1,4 +1,9 @@
 <resources>
 
     <string name="title_activity_test">GitSP Test</string>
+
+    <string name="ui_test_open">Open Document</string>
+    <string name="ui_test_write">Write Document</string>
+    <string name="ui_test_edit">Edit Document</string>
+
 </resources>

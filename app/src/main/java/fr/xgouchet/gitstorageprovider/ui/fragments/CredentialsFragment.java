@@ -52,7 +52,7 @@ public class CredentialsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.default_ideal_view, container, false);
+        View root = inflater.inflate(R.layout.ideal_local_repos, container, false);
         bind(this, root);
 
         // set recycler view layout manager

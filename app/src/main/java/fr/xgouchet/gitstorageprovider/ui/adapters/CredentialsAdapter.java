@@ -10,7 +10,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import fr.xgouchet.gitstorageprovider.R;
-import fr.xgouchet.gitstorageprovider.core.credentials.Credential;
+import fr.xgouchet.gitsp.git.Credential;
 
 import static butterknife.ButterKnife.bind;
 

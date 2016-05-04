@@ -3,12 +3,12 @@
 
     <string name="title_activity_main">GitSP</string>
 
+    <string name="storage_root_title">Git SP</string>
 
-    <string name="root_title">gitsp</string>
-    <string name="ui_test_open">Open Document</string>
-    <string name="ui_test_write">Write Document</string>
-    <string name="ui_test_edit">Edit Document</string>
-    <string name="default_empty_text">Nothing to show...</string>
-    <string name="default_loading_text">Loading...</string>
+    <string name="empty_local_repos">"No local repositories yet.\nAdd one with the + button"</string>
+    <string name="error_empty_failure">\? Why This Failure ?</string>
+
+    <string name="title_action_add_account">Add account</string>
+    <string name="title_action_add_credential">Add Credential</string>
 
 </resources>
