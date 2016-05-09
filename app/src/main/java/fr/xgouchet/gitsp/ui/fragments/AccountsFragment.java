@@ -1,7 +1,10 @@
 package fr.xgouchet.gitsp.ui.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +17,22 @@ import com.google.android.agera.Updatable;
 
 import java.util.List;
 
+import fr.xgouchet.gitsp.GitSPApplication;
 import fr.xgouchet.gitsp.R;
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitsp.oauth.OAuthAccountsSupplier;
+import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.ui.fragments.stateful.FabDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleFabDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleStateDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.StateDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.StateHolder;
+import fr.xgouchet.gitsp.ui.fragments.stateful.StatefulFragment;
 
 /**
  * @author Xavier Gouchet
  */
-public class AccountsFragment extends AStatefulFragment implements Updatable {
+public class AccountsFragment extends StatefulFragment implements Updatable {
 
 
     private RefreshObservable refreshObservable;
@@ -42,7 +53,7 @@ public class AccountsFragment extends AStatefulFragment implements Updatable {
         refreshObservable.addUpdatable(new Updatable() {
             @Override
             public void update() {
-                setLoadingState();
+                setCurrentState(StateHolder.LOADING);
             }
         });
         refreshObservable.onRefresh();
@@ -61,19 +72,25 @@ public class AccountsFragment extends AStatefulFragment implements Updatable {
         Result<List<OAuthAccount>> result = accountsRepository.get();
 
         if (result.isAbsent()) {
-            setEmptyState(getString(R.string.empty_accounts),
-                    ContextCompat.getDrawable(getActivity(), R.drawable.ic_accounts));
+            setEmpty();
         } else if (result.failed()) {
-            setErrorState(result.failureOrNull());
+            stateDelegate.setFailure(result.failureOrNull());
+            setCurrentState(StateHolder.ERROR);
         } else {
             if (result.get().isEmpty()) {
-                setEmptyState(getString(R.string.empty_accounts),
-                        ContextCompat.getDrawable(getActivity(), R.drawable.ic_accounts));
+                setEmpty();
             } else {
-                setIdealState();
+                setCurrentState(StateHolder.IDEAL);
             }
         }
     }
+
+    private void setEmpty() {
+        stateDelegate.setEmptyContent(getString(R.string.empty_accounts),
+                ContextCompat.getDrawable(getActivity(), R.drawable.ic_accounts));
+        setCurrentState(StateHolder.EMPTY);
+    }
+
 
     private void setupRepositories() {
         refreshObservable = new RefreshObservable();
@@ -82,7 +99,7 @@ public class AccountsFragment extends AStatefulFragment implements Updatable {
                 .repositoryWithInitialValue(Result.<List<OAuthAccount>>absent())
                 .observe(refreshObservable)
                 .onUpdatesPer(500)
-                .goTo(getBackgroundExecutor())
+                .goTo(((GitSPApplication) getActivity().getApplication()).getBackgroundExecutor())
                 .thenGetFrom(new OAuthAccountsSupplier(getActivity().getBaseContext()))
                 .notifyIf(Mergers.staticMerger(true))
                 .compile();
@@ -92,23 +109,42 @@ public class AccountsFragment extends AStatefulFragment implements Updatable {
      * CUSTOMIZATION
      */
 
+    private final FabDelegate fabDelegate = new SimpleFabDelegate() {
+        @Override
+        public void onFabClicked(@StateHolder.State int state) {
+            DialogFragment fragment = OAuthFragment.withService(OAuthConfigFactory.SERVICE_GITHUB);
+            fragment.show(getFragmentManager(), "OAuth");
+        }
+
+        @Nullable
+        @Override
+        public Drawable getFabDrawable(@StateHolder.State int state) {
+            return ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_add_acount);
+        }
+    };
+
+    private final SimpleStateDelegate stateDelegate = new SimpleStateDelegate() {
+        @NonNull
+        @Override
+        public View createIdealView(@NonNull ViewGroup parent) {
+            return new View(getActivity());
+        }
+
+        @Override
+        public void updateIdealView(@NonNull View idealView) {
+
+        }
+    };
+
     @NonNull
     @Override
-    protected View createIdealView(@NonNull ViewGroup parent) {
-        return new View(getActivity());
+    protected StateDelegate getStateDelegate() {
+        return stateDelegate;
     }
 
+    @Nullable
     @Override
-    protected int getFabVisibility(@State int state) {
-        switch (state) {
-            case AStatefulFragment.EMPTY:
-            case AStatefulFragment.ERROR:
-            case AStatefulFragment.IDEAL:
-                return View.VISIBLE;
-            case AStatefulFragment.LOADING:
-            default:
-                return View.GONE;
-        }
+    protected FabDelegate getFabDelegate() {
+        return fabDelegate;
     }
-
 }

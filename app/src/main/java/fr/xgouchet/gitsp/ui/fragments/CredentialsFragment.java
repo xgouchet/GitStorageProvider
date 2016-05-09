@@ -1,10 +1,13 @@
 package fr.xgouchet.gitsp.ui.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.agera.Mergers;
 import com.google.android.agera.Repositories;
@@ -14,14 +17,20 @@ import com.google.android.agera.Updatable;
 
 import java.util.List;
 
+import fr.xgouchet.gitsp.GitSPApplication;
 import fr.xgouchet.gitsp.R;
 import fr.xgouchet.gitsp.git.Credential;
 import fr.xgouchet.gitsp.git.CredentialsSupplier;
+import fr.xgouchet.gitsp.ui.fragments.stateful.FabDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleFabDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleStateDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.StateHolder;
+import fr.xgouchet.gitsp.ui.fragments.stateful.StatefulFragment;
 
 /**
  * @author Xavier Gouchet
  */
-public class CredentialsFragment extends AStatefulFragment implements Updatable {
+public class CredentialsFragment extends StatefulFragment implements Updatable {
 
 
     private RefreshObservable refreshObservable;
@@ -42,7 +51,7 @@ public class CredentialsFragment extends AStatefulFragment implements Updatable 
         refreshObservable.addUpdatable(new Updatable() {
             @Override
             public void update() {
-                setLoadingState();
+                setCurrentState(StateHolder.LOADING);
             }
         });
         refreshObservable.onRefresh();
@@ -61,18 +70,23 @@ public class CredentialsFragment extends AStatefulFragment implements Updatable 
         Result<List<Credential>> result = credentialsRepository.get();
 
         if (result.isAbsent()) {
-            setEmptyState(getString(R.string.empty_credentials),
-                    ContextCompat.getDrawable(getActivity(), R.drawable.ic_credentials));
+            setEmpty();
         } else if (result.failed()) {
-            setErrorState(result.failureOrNull());
+            stateDelegate.setFailure(result.failureOrNull());
+            setCurrentState(StateHolder.ERROR);
         } else {
             if (result.get().isEmpty()) {
-                setEmptyState(getString(R.string.empty_credentials),
-                        ContextCompat.getDrawable(getActivity(), R.drawable.ic_credentials));
+                setEmpty();
             } else {
-                setIdealState();
+                setCurrentState(StateHolder.IDEAL);
             }
         }
+    }
+
+    private void setEmpty() {
+        stateDelegate.setEmptyContent(getString(R.string.empty_credentials),
+                ContextCompat.getDrawable(getActivity(), R.drawable.ic_credentials));
+        setCurrentState(StateHolder.EMPTY);
     }
 
     private void setupRepositories() {
@@ -82,7 +96,7 @@ public class CredentialsFragment extends AStatefulFragment implements Updatable 
                 .repositoryWithInitialValue(Result.<List<Credential>>absent())
                 .observe(refreshObservable)
                 .onUpdatesPer(500)
-                .goTo(getBackgroundExecutor())
+                .goTo(((GitSPApplication) getActivity().getApplication()).getBackgroundExecutor())
                 .thenGetFrom(new CredentialsSupplier(getActivity().getBaseContext()))
                 .notifyIf(Mergers.staticMerger(true))
                 .compile();
@@ -92,23 +106,43 @@ public class CredentialsFragment extends AStatefulFragment implements Updatable 
      * CUSTOMIZATION
      */
 
-    @NonNull
+    @Nullable
     @Override
-    protected View createIdealView(@NonNull ViewGroup parent) {
-        return new View(getActivity());
+    public FabDelegate getFabDelegate() {
+        return fabDelegate;
     }
 
+    @NonNull
     @Override
-    protected int getFabVisibility(@State int state) {
-        switch (state) {
-            case AStatefulFragment.EMPTY:
-            case AStatefulFragment.ERROR:
-            case AStatefulFragment.IDEAL:
-                return View.VISIBLE;
-            case AStatefulFragment.LOADING:
-            default:
-                return View.GONE;
-        }
+    public SimpleStateDelegate getStateDelegate() {
+        return stateDelegate;
     }
+
+    private final FabDelegate fabDelegate = new SimpleFabDelegate() {
+        @Override
+        public void onFabClicked(@StateHolder.State int state) {
+            Toast.makeText(getActivity(), "Add credentials (TODO)", Toast.LENGTH_SHORT).show();
+        }
+
+        @Nullable
+        @Override
+        public Drawable getFabDrawable(@StateHolder.State int state) {
+            return ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_add_credential);
+        }
+    };
+
+    private final SimpleStateDelegate stateDelegate = new SimpleStateDelegate() {
+        @NonNull
+        @Override
+        public View createIdealView(@NonNull ViewGroup parent) {
+            return new View(getActivity());
+        }
+
+        @Override
+        public void updateIdealView(@NonNull View idealView) {
+
+        }
+    };
+
 
 }

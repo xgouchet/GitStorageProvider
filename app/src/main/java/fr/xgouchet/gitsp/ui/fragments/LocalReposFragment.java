@@ -1,7 +1,9 @@
 package fr.xgouchet.gitsp.ui.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +18,22 @@ import com.google.android.agera.Updatable;
 
 import java.util.List;
 
+import fr.xgouchet.gitsp.GitSPApplication;
 import fr.xgouchet.gitsp.R;
 import fr.xgouchet.gitsp.git.LocalRepo;
 import fr.xgouchet.gitsp.git.LocalReposSupplier;
+import fr.xgouchet.gitsp.ui.fragments.stateful.FabDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleFabDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleStateDelegate;
+import fr.xgouchet.gitsp.ui.fragments.stateful.StateHolder;
+import fr.xgouchet.gitsp.ui.fragments.stateful.StatefulFragment;
 
 import static butterknife.ButterKnife.bind;
 
 /**
  * @author Xavier Gouchet
  */
-public class LocalReposFragment extends AStatefulFragment implements Updatable {
+public class LocalReposFragment extends StatefulFragment implements Updatable {
 
 
     private RefreshObservable refreshObservable;
@@ -46,7 +54,7 @@ public class LocalReposFragment extends AStatefulFragment implements Updatable {
         refreshObservable.addUpdatable(new Updatable() {
             @Override
             public void update() {
-                setLoadingState();
+                setCurrentState(StateHolder.LOADING);
             }
         });
         refreshObservable.onRefresh();
@@ -64,18 +72,23 @@ public class LocalReposFragment extends AStatefulFragment implements Updatable {
         Result<List<LocalRepo>> result = localReposRepository.get();
 
         if (result.isAbsent()) {
-            setEmptyState(getString(R.string.empty_local_repos),
-                    ContextCompat.getDrawable(getActivity(), R.drawable.ic_local_repository));
+            setEmpty();
         } else if (result.failed()) {
-            setErrorState(result.failureOrNull());
+            stateDelegate.setFailure(result.failureOrNull());
+            setCurrentState(StateHolder.ERROR);
         } else {
             if (result.get().isEmpty()) {
-                setEmptyState(getString(R.string.empty_local_repos),
-                        ContextCompat.getDrawable(getActivity(), R.drawable.ic_local_repository));
+                setEmpty();
             } else {
-                setIdealState();
+                setCurrentState(StateHolder.IDEAL);
             }
         }
+    }
+
+    private void setEmpty() {
+        stateDelegate.setEmptyContent(getString(R.string.empty_local_repos),
+                ContextCompat.getDrawable(getActivity(), R.drawable.ic_local_repository));
+        setCurrentState(StateHolder.EMPTY);
     }
 
     private void setupRepositories() {
@@ -85,42 +98,58 @@ public class LocalReposFragment extends AStatefulFragment implements Updatable {
                 .repositoryWithInitialValue(Result.<List<LocalRepo>>absent())
                 .observe(refreshObservable)
                 .onUpdatesPer(500)
-                .goTo(getBackgroundExecutor())
+                .goTo(((GitSPApplication) getActivity().getApplication()).getBackgroundExecutor())
                 .thenGetFrom(new LocalReposSupplier(getActivity().getBaseContext()))
                 .notifyIf(Mergers.staticMerger(true))
                 .compile();
     }
 
-    @Override
-    protected void onFabClicked(@State int state) {
-        Toast.makeText(getActivity(), "Cloning Editors (need Credentials)", Toast.LENGTH_SHORT).show();
-    }
 
     /*
      * CUSTOMIZATION
      */
 
+    @Nullable
+    @Override
+    public FabDelegate getFabDelegate() {
+        return fabDelegate;
+    }
+
     @NonNull
     @Override
-    protected View createIdealView(@NonNull ViewGroup parent) {
-        View ideal = LayoutInflater.from(getActivity())
-                .inflate(R.layout.ideal_local_repos, parent, false);
-
-        bind(this, ideal);
-
-        return ideal;
+    public SimpleStateDelegate getStateDelegate() {
+        return stateDelegate;
     }
 
-    @Override
-    protected int getFabVisibility(@State int state) {
-        switch (state) {
-            case AStatefulFragment.EMPTY:
-            case AStatefulFragment.ERROR:
-            case AStatefulFragment.IDEAL:
-                return View.VISIBLE;
-            case AStatefulFragment.LOADING:
-            default:
-                return View.GONE;
+    private final FabDelegate fabDelegate = new SimpleFabDelegate() {
+        @Override
+        public void onFabClicked(@StateHolder.State int state) {
+            Toast.makeText(getActivity(), "Cloning Editors (need Credentials)", Toast.LENGTH_SHORT).show();
         }
-    }
+
+        @Nullable
+        @Override
+        public Drawable getFabDrawable(@StateHolder.State int state) {
+            return ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_add);
+        }
+    };
+
+    private final SimpleStateDelegate stateDelegate = new SimpleStateDelegate() {
+        @NonNull
+        @Override
+        public View createIdealView(@NonNull ViewGroup parent) {
+            View ideal = LayoutInflater.from(getActivity())
+                    .inflate(R.layout.ideal_local_repos, parent, false);
+
+            bind(this, ideal);
+
+            return ideal;
+        }
+
+        @Override
+        public void updateIdealView(@NonNull View idealView) {
+
+        }
+    };
+
 }
