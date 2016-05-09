@@ -3,10 +3,8 @@ package fr.xgouchet.gitsp.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.agera.Mergers;
 import com.google.android.agera.Repositories;
@@ -17,19 +15,17 @@ import com.google.android.agera.Updatable;
 import java.util.List;
 
 import fr.xgouchet.gitsp.R;
-import fr.xgouchet.gitsp.git.LocalRepo;
-import fr.xgouchet.gitsp.git.LocalReposSupplier;
-
-import static butterknife.ButterKnife.bind;
+import fr.xgouchet.gitsp.git.Credential;
+import fr.xgouchet.gitsp.git.CredentialsSupplier;
 
 /**
  * @author Xavier Gouchet
  */
-public class LocalReposFragment extends AStatefulFragment implements Updatable {
+public class CredentialsFragment extends AStatefulFragment implements Updatable {
 
 
     private RefreshObservable refreshObservable;
-    private Repository<Result<List<LocalRepo>>> localReposRepository;
+    private Repository<Result<List<Credential>>> credentialsRepository;
 
 
     @Override
@@ -42,7 +38,7 @@ public class LocalReposFragment extends AStatefulFragment implements Updatable {
     public void onResume() {
         super.onResume();
 
-        localReposRepository.addUpdatable(this);
+        credentialsRepository.addUpdatable(this);
         refreshObservable.addUpdatable(new Updatable() {
             @Override
             public void update() {
@@ -56,22 +52,23 @@ public class LocalReposFragment extends AStatefulFragment implements Updatable {
     @Override
     public void onPause() {
         super.onPause();
-        localReposRepository.removeUpdatable(this);
+        credentialsRepository.removeUpdatable(this);
     }
+
 
     @Override
     public void update() {
-        Result<List<LocalRepo>> result = localReposRepository.get();
+        Result<List<Credential>> result = credentialsRepository.get();
 
         if (result.isAbsent()) {
-            setEmptyState(getString(R.string.empty_local_repos),
-                    ContextCompat.getDrawable(getActivity(), R.drawable.ic_local_repository));
+            setEmptyState(getString(R.string.empty_credentials),
+                    ContextCompat.getDrawable(getActivity(), R.drawable.ic_credentials));
         } else if (result.failed()) {
             setErrorState(result.failureOrNull());
         } else {
             if (result.get().isEmpty()) {
-                setEmptyState(getString(R.string.empty_local_repos),
-                        ContextCompat.getDrawable(getActivity(), R.drawable.ic_local_repository));
+                setEmptyState(getString(R.string.empty_credentials),
+                        ContextCompat.getDrawable(getActivity(), R.drawable.ic_credentials));
             } else {
                 setIdealState();
             }
@@ -81,19 +78,14 @@ public class LocalReposFragment extends AStatefulFragment implements Updatable {
     private void setupRepositories() {
         refreshObservable = new RefreshObservable();
 
-        localReposRepository = Repositories
-                .repositoryWithInitialValue(Result.<List<LocalRepo>>absent())
+        credentialsRepository = Repositories
+                .repositoryWithInitialValue(Result.<List<Credential>>absent())
                 .observe(refreshObservable)
                 .onUpdatesPer(500)
                 .goTo(getBackgroundExecutor())
-                .thenGetFrom(new LocalReposSupplier(getActivity().getBaseContext()))
+                .thenGetFrom(new CredentialsSupplier(getActivity().getBaseContext()))
                 .notifyIf(Mergers.staticMerger(true))
                 .compile();
-    }
-
-    @Override
-    protected void onFabClicked(@State int state) {
-        Toast.makeText(getActivity(), "Cloning Editors (need Credentials)", Toast.LENGTH_SHORT).show();
     }
 
     /*
@@ -103,12 +95,7 @@ public class LocalReposFragment extends AStatefulFragment implements Updatable {
     @NonNull
     @Override
     protected View createIdealView(@NonNull ViewGroup parent) {
-        View ideal = LayoutInflater.from(getActivity())
-                .inflate(R.layout.ideal_local_repos, parent, false);
-
-        bind(this, ideal);
-
-        return ideal;
+        return new View(getActivity());
     }
 
     @Override
@@ -123,4 +110,5 @@ public class LocalReposFragment extends AStatefulFragment implements Updatable {
                 return View.GONE;
         }
     }
+
 }

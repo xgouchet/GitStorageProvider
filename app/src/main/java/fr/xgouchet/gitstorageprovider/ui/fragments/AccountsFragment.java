@@ -20,7 +20,7 @@ import butterknife.BindView;
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.GitApplication;
-import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitsp.R;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
 import fr.xgouchet.gitstorageprovider.core.events.AccountsChangedEvent;
 import fr.xgouchet.gitstorageprovider.ui.activities.LoginActivity;

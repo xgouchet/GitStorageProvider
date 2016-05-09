@@ -12,7 +12,7 @@ import java.util.List;
 import butterknife.BindView;
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
-import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitsp.R;
 
 import static butterknife.ButterKnife.bind;
 

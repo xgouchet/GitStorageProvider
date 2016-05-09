@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
-import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitsp.R;
 import fr.xgouchet.gitstorageprovider.ui.fragments.OAuthFragment;
 
 

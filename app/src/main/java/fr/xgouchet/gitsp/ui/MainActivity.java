@@ -2,12 +2,17 @@ package fr.xgouchet.gitsp.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 
 import butterknife.BindView;
-import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitsp.ui.fragments.AccountsFragment;
+import fr.xgouchet.gitsp.ui.fragments.CredentialsFragment;
+import fr.xgouchet.gitsp.ui.fragments.LocalReposFragment;
+import fr.xgouchet.gitsp.R;
 
 import static butterknife.ButterKnife.bind;
 
@@ -16,8 +21,8 @@ import static butterknife.ButterKnife.bind;
  */
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.main_toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.main_view_pager)
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,13 +31,58 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bind(this);
 
-        setSupportActionBar(toolbar);
+        viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    private class MainPagerAdapter extends FragmentPagerAdapter {
+
+        public static final int PAGE_LOCAL_REPOS = 0;
+        public static final int PAGE_ACCOUNTS = 1;
+        public static final int PAGE_CREDENTIALS = 2;
+        public static final int PAGE_SETTINGS = 3;
+
+        public static final int PAGES_COUNT = 4;
+
+        public MainPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return PAGES_COUNT;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case PAGE_LOCAL_REPOS:
+                    return getString(R.string.title_page_local_repos);
+                case PAGE_ACCOUNTS:
+                    return getString(R.string.title_page_accounts);
+                case PAGE_CREDENTIALS:
+                    return getString(R.string.title_page_credentials);
+                case PAGE_SETTINGS:
+                    return getString(R.string.title_page_settings);
+                default:
+                    return "???";
+            }
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case PAGE_LOCAL_REPOS:
+                    return new LocalReposFragment();
+                case PAGE_ACCOUNTS:
+                    return new AccountsFragment();
+                case PAGE_CREDENTIALS:
+                    return new CredentialsFragment();
+                default:
+                    return new Fragment();
+            }
+        }
+
+
     }
 }
 

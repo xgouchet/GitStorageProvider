@@ -26,7 +26,6 @@ public class LocalRepositoriesManager {
     private static final String WORKSPACE_NAME = "workspace";
     private static final String TAG = LocalRepositoriesManager.class.getSimpleName();
 
-    private final Context mContext;
     private final DoubleDeckerBus mBus;
 
     private final CredentialsManager mCredentialsManager;
@@ -39,7 +38,6 @@ public class LocalRepositoriesManager {
 
     public LocalRepositoriesManager(final @NonNull Context context,
                                     final @NonNull DoubleDeckerBus bus) {
-        mContext = context;
         mBus = bus;
 
         mCredentialsManager = new CredentialsManager(context);

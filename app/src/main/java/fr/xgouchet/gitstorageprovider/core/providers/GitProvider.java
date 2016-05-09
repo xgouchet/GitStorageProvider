@@ -10,15 +10,18 @@ import android.support.annotation.Nullable;
 
 import java.io.FileNotFoundException;
 
-import fr.xgouchet.gitstorageprovider.BuildConfig;
-import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitsp.BuildConfig;
+import fr.xgouchet.gitsp.R;
+
 
 /**
  * @author Xavier Gouchet
  */
 public class GitProvider extends DocumentsProvider {
 
-    /** The Authority declared in the manifest */
+    /**
+     * The Authority declared in the manifest
+     */
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.documents";
 
     private static final String[] DEFAULT_ROOT_PROJECTION = new String[]{
@@ -57,14 +60,14 @@ public class GitProvider extends DocumentsProvider {
         final MatrixCursor.RowBuilder row = result.newRow();
         row.add(DocumentsContract.Root.COLUMN_ROOT_ID, "Foo");
         row.add(DocumentsContract.Root.COLUMN_DOCUMENT_ID, "gita://Foo/");
-        row.add(DocumentsContract.Root.COLUMN_TITLE, getContext().getString(R.string.storage_root_title));
+//        row.add(DocumentsContract.Root.COLUMN_TITLE, getContext().getString(R.string.storage_root_title));
         row.add(DocumentsContract.Root.COLUMN_SUMMARY, "Foo △");
 
         // Flags to describe when this root should be presented
         row.add(DocumentsContract.Root.COLUMN_FLAGS,
                 DocumentsContract.Root.FLAG_SUPPORTS_CREATE |
-                DocumentsContract.Root.FLAG_SUPPORTS_RECENTS |
-                DocumentsContract.Root.FLAG_SUPPORTS_SEARCH);
+                        DocumentsContract.Root.FLAG_SUPPORTS_RECENTS |
+                        DocumentsContract.Root.FLAG_SUPPORTS_SEARCH);
 
         // assume we support all types
         row.add(DocumentsContract.Root.COLUMN_MIME_TYPES, null);

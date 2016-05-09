@@ -1,20 +1,26 @@
 package fr.xgouchet.gitsp.ui.fragments;
 
-import android.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+
+import java.util.concurrent.ExecutorService;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitsp.GitSPApplication;
+import fr.xgouchet.gitsp.R;
 
 import static butterknife.ButterKnife.bind;
 
@@ -27,7 +33,6 @@ public abstract class AStatefulFragment extends Fragment {
     public static final int LOADING = 1;
     public static final int IDEAL = 2;
     public static final int ERROR = 3;
-
 
     @IntDef({EMPTY, LOADING, IDEAL, ERROR})
     public @interface State {
@@ -44,6 +49,13 @@ public abstract class AStatefulFragment extends Fragment {
 
     private View emptyView, loadingView, errorView, idealView;
 
+    @Nullable
+    private Throwable failure;
+    @Nullable
+    private CharSequence emptyMessage;
+    @Nullable
+    private Drawable emptyIcon;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +71,12 @@ public abstract class AStatefulFragment extends Fragment {
 
         setCurrentState(EMPTY);
         return root;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        container.removeAllViews();
     }
 
     private void prepareFab() {
@@ -84,7 +102,31 @@ public abstract class AStatefulFragment extends Fragment {
      * STATES
      */
 
-    public void setCurrentState(@State int state) {
+    @UiThread
+    public void setLoadingState() {
+        setCurrentState(LOADING);
+    }
+
+    @UiThread
+    public void setIdealState() {
+        setCurrentState(IDEAL);
+    }
+
+    @UiThread
+    public void setEmptyState(@Nullable CharSequence emptyMessage, @Nullable Drawable emptyIcon) {
+        this.emptyMessage = emptyMessage;
+        this.emptyIcon = emptyIcon;
+        setCurrentState(EMPTY);
+    }
+
+    @UiThread
+    public void setErrorState(@Nullable Throwable failure) {
+        this.failure = failure;
+        setCurrentState(ERROR);
+    }
+
+    @UiThread
+    private void setCurrentState(@State int state) {
         if (this.state == state) {
             // already in the correct state, ignore
             return;
@@ -107,9 +149,17 @@ public abstract class AStatefulFragment extends Fragment {
         }
     }
 
+    @UiThread
     private void showView(@NonNull View view) {
+        ViewGroup parent = (ViewGroup) view.getParent();
+        if (parent != null) parent.removeView(view);
+
         container.removeAllViews();
         container.addView(view);
+    }
+
+    protected ExecutorService getBackgroundExecutor() {
+        return ((GitSPApplication) getActivity().getApplication()).getBackgroundExecutor();
     }
 
     /*
@@ -117,13 +167,17 @@ public abstract class AStatefulFragment extends Fragment {
      */
 
     /**
-     * @param state
+     * @param state the current state of the fragment
      * @return whether the FAB should be visible
      */
     protected int getFabVisibility(@State int state) {
         return View.GONE;
     }
 
+    /**
+     * @param state the current state of the fragment
+     * @return the drawable to display (default is a '+')
+     */
     @NonNull
     protected Drawable getFabDrawable(@State int state) {
         return ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_add);
@@ -136,7 +190,10 @@ public abstract class AStatefulFragment extends Fragment {
      * @return the view to display when the current fragment's state is empty
      */
     @NonNull
-    protected abstract View createEmptyView(@NonNull ViewGroup parent);
+    private View createEmptyView(@NonNull ViewGroup parent) {
+        return LayoutInflater.from(getActivity())
+                .inflate(R.layout.empty_default, parent, false);
+    }
 
     /**
      * Called every time the empty view needs to be displayed.
@@ -145,6 +202,13 @@ public abstract class AStatefulFragment extends Fragment {
      * @param emptyView the emptyView about to be displayed
      */
     protected void updateEmptyView(@NonNull View emptyView) {
+        TextView emptyText = (TextView) emptyView.findViewById(android.R.id.message);
+        if (emptyText == null) {
+            return;
+        }
+
+        emptyText.setText(emptyMessage);
+        emptyText.setCompoundDrawablesWithIntrinsicBounds(null, emptyIcon, null, null);
     }
 
     /**
@@ -154,7 +218,10 @@ public abstract class AStatefulFragment extends Fragment {
      * @return the view to display when the current fragment's state is loading
      */
     @NonNull
-    protected abstract View createLoadingView(@NonNull ViewGroup parent);
+    private View createLoadingView(@NonNull ViewGroup parent) {
+        return LayoutInflater.from(getActivity())
+                .inflate(R.layout.loading_default, parent, false);
+    }
 
     /**
      * Called every time the loading view needs to be displayed.
@@ -172,7 +239,10 @@ public abstract class AStatefulFragment extends Fragment {
      * @return the view to display when the current fragment's state is error
      */
     @NonNull
-    protected abstract View createErrorView(@NonNull ViewGroup parent);
+    protected View createErrorView(@NonNull ViewGroup parent) {
+        return LayoutInflater.from(getActivity())
+                .inflate(R.layout.error_default, parent, false);
+    }
 
     /**
      * Called every time the error view needs to be displayed.
@@ -181,6 +251,17 @@ public abstract class AStatefulFragment extends Fragment {
      * @param errorView the view about to be displayed
      */
     protected void updateErrorView(@NonNull View errorView) {
+        TextView errorText = (TextView) errorView.findViewById(android.R.id.message);
+        if (errorText == null) {
+            return;
+        }
+
+        if (failure == null) {
+            errorText.setText(R.string.error_empty_failure);
+        } else {
+            errorText.setText(failure.getMessage());
+        }
+        errorText.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_local_repository), null, null);
     }
 
     /**

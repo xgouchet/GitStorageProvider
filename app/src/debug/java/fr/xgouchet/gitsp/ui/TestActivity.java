@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitsp.R;
 
 import static butterknife.ButterKnife.bind;
 

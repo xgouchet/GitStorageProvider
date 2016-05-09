@@ -6,9 +6,20 @@
     <string name="storage_root_title">Git SP</string>
 
     <string name="empty_local_repos">"No local repositories yet.\nAdd one with the + button"</string>
+    <string name="empty_accounts">"No accounts yet.\nAdd one with the + button"</string>
+    <string name="empty_credentials">"No credentials yet.\nAdd one with the + button"</string>
+
     <string name="error_empty_failure">\? Why This Failure ?</string>
 
     <string name="title_action_add_account">Add account</string>
     <string name="title_action_add_credential">Add Credential</string>
+    <string name="title_action_settings">Settings</string>
+
+    <string name="title_page_local_repos">Local Repositories</string>
+    <string name="title_page_accounts">Accounts</string>
+    <string name="title_page_credentials">Credentials</string>
+    <string name="title_page_settings">Settings</string>
+
+
 
 </resources>

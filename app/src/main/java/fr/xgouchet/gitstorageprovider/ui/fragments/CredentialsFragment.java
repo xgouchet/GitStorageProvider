@@ -14,7 +14,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import fr.xgouchet.gitstorageprovider.GitApplication;
-import fr.xgouchet.gitstorageprovider.R;
+import fr.xgouchet.gitsp.R;
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.core.account.AccountsManager;
 import fr.xgouchet.gitstorageprovider.core.events.NavigationEvent;
