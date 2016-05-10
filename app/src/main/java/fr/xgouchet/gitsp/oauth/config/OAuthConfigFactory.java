@@ -1,10 +1,8 @@
-package fr.xgouchet.gitsp.oauth;
+package fr.xgouchet.gitsp.oauth.config;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
-import fr.xgouchet.gitstorageprovider.core.api.github.GithubOAuthConfig;
 
 /**
  * @author Xavier Gouchet

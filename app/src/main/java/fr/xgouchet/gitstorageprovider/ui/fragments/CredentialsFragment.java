@@ -34,7 +34,7 @@ public class CredentialsFragment extends Fragment {
 
     @BindView(android.R.id.list)
     RecyclerView mRecyclerView;
-    @BindView(R.id.fab)
+//    @BindView(R.id.fab)
     FloatingActionButton mFAB;
 
     private RecyclerView.Adapter mCredentialsAdapter;
@@ -52,7 +52,7 @@ public class CredentialsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.ideal_local_repos, container, false);
+        View root = inflater.inflate(R.layout.ideal_list, container, false);
         bind(this, root);
 
         // set recycler view layout manager

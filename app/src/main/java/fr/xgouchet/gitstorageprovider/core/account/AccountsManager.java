@@ -12,8 +12,8 @@ import java.util.List;
 
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitstorageprovider.core.events.AccountsChangedEvent;
-import fr.xgouchet.gitsp.oauth.OAuthConfig;
-import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.config.OAuthConfig;
+import fr.xgouchet.gitsp.oauth.config.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.core.oauth.RequestAccessTokenAction;
 import fr.xgouchet.gitstorageprovider.utils.DoubleDeckerBus;
 import fr.xgouchet.gitstorageprovider.utils.actions.ActionQueueExecutor;

@@ -1,10 +1,10 @@
-package fr.xgouchet.gitstorageprovider.core.api.github;
+package fr.xgouchet.gitsp.oauth.config;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import fr.xgouchet.gitsp.oauth.OAuthConfig;
-import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author Xavier Gouchet
@@ -33,20 +33,20 @@ public class GithubOAuthConfig extends OAuthConfig {
     }
 
     @Override
-    protected String getAccessTokenRequestUri() {
+    public String getAccessTokenRequestUri() {
         return OAUTH_ACCESS;
     }
 
 
     @NonNull
     @Override
-    protected String getClientId() {
+    public String getClientId() {
         return CLIENT_ID;
     }
 
     @Nullable
     @Override
-    protected String getClientSecret() {
+    public String getClientSecret() {
         return SECRET_KEY;
     }
 
@@ -56,7 +56,7 @@ public class GithubOAuthConfig extends OAuthConfig {
         return "public_repo,repo";
     }
 
-    @Nullable
+    @NonNull
     @Override
     public String getRedirectUri() {
         return REDIRECT;
@@ -74,6 +74,23 @@ public class GithubOAuthConfig extends OAuthConfig {
 
     @NonNull
     @Override
+    public String parseUserName(@NonNull String response) throws IllegalArgumentException {
+        try {
+            JSONObject object = new JSONObject(response);
+            String userName = object.getString("login");
+            if (userName == null) {
+                // Coding by exception, don't like it either... then again
+                throw new NullPointerException();
+            }
+            return userName;
+        } catch (JSONException | NullPointerException e) {
+            throw new IllegalArgumentException(e);
+        }
+
+    }
+
+    @NonNull
+    @Override
     public String[] getUserNamePath() {
         return new String[]{"login"};
     }
@@ -82,4 +99,6 @@ public class GithubOAuthConfig extends OAuthConfig {
     public int getServiceId() {
         return OAuthConfigFactory.SERVICE_GITHUB;
     }
+
+
 }

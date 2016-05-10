@@ -9,18 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.agera.Mergers;
-import com.google.android.agera.Repositories;
-import com.google.android.agera.Repository;
-import com.google.android.agera.Result;
-import com.google.android.agera.Updatable;
-
-import java.util.List;
-
-import fr.xgouchet.gitsp.GitSPApplication;
 import fr.xgouchet.gitsp.R;
-import fr.xgouchet.gitsp.git.Credential;
-import fr.xgouchet.gitsp.git.CredentialsSupplier;
 import fr.xgouchet.gitsp.ui.fragments.stateful.FabDelegate;
 import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleFabDelegate;
 import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleStateDelegate;
@@ -30,12 +19,7 @@ import fr.xgouchet.gitsp.ui.fragments.stateful.StatefulFragment;
 /**
  * @author Xavier Gouchet
  */
-public class CredentialsFragment extends StatefulFragment implements Updatable {
-
-
-    private RefreshObservable refreshObservable;
-    private Repository<Result<List<Credential>>> credentialsRepository;
-
+public class CredentialsFragment extends StatefulFragment  {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,41 +30,30 @@ public class CredentialsFragment extends StatefulFragment implements Updatable {
     @Override
     public void onResume() {
         super.onResume();
-
-        credentialsRepository.addUpdatable(this);
-        refreshObservable.addUpdatable(new Updatable() {
-            @Override
-            public void update() {
-                setCurrentState(StateHolder.LOADING);
-            }
-        });
-        refreshObservable.onRefresh();
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
-        credentialsRepository.removeUpdatable(this);
     }
 
 
-    @Override
     public void update() {
-        Result<List<Credential>> result = credentialsRepository.get();
-
-        if (result.isAbsent()) {
-            setEmpty();
-        } else if (result.failed()) {
-            stateDelegate.setFailure(result.failureOrNull());
-            setCurrentState(StateHolder.ERROR);
-        } else {
-            if (result.get().isEmpty()) {
-                setEmpty();
-            } else {
-                setCurrentState(StateHolder.IDEAL);
-            }
-        }
+//        Result<List<Credential>> result = credentialsRepository.get();
+//
+//        if (result.isAbsent()) {
+//            setEmpty();
+//        } else if (result.failed()) {
+//            stateDelegate.setFailure(result.failureOrNull());
+//            setCurrentState(StateHolder.ERROR);
+//        } else {
+//            if (result.get().isEmpty()) {
+//                setEmpty();
+//            } else {
+//                setCurrentState(StateHolder.IDEAL);
+//            }
+//        }
     }
 
     private void setEmpty() {
@@ -90,16 +63,16 @@ public class CredentialsFragment extends StatefulFragment implements Updatable {
     }
 
     private void setupRepositories() {
-        refreshObservable = new RefreshObservable();
-
-        credentialsRepository = Repositories
-                .repositoryWithInitialValue(Result.<List<Credential>>absent())
-                .observe(refreshObservable)
-                .onUpdatesPer(500)
-                .goTo(((GitSPApplication) getActivity().getApplication()).getBackgroundExecutor())
-                .thenGetFrom(new CredentialsSupplier(getActivity().getBaseContext()))
-                .notifyIf(Mergers.staticMerger(true))
-                .compile();
+//        refreshObservable = new RefreshObservable();
+//
+//        credentialsRepository = Repositories
+//                .repositoryWithInitialValue(Result.<List<Credential>>absent())
+//                .observe(refreshObservable)
+//                .onUpdatesPer(500)
+//                .goTo(((GitSPApplication) getActivity().getApplication()).getBackgroundExecutor())
+//                .thenGetFrom(new CredentialsSupplier(getActivity().getBaseContext()))
+//                .notifyIf(Mergers.staticMerger(true))
+//                .compile();
     }
 
     /*

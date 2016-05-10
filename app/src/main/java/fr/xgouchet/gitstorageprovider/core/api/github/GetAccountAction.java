@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
+import fr.xgouchet.gitsp.oauth.config.GithubOAuthConfig;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncRequestAction;
 
 /**

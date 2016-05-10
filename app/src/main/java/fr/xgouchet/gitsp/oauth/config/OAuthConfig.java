@@ -1,4 +1,4 @@
-package fr.xgouchet.gitsp.oauth;
+package fr.xgouchet.gitsp.oauth.config;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -23,12 +23,9 @@ public abstract class OAuthConfig {
         if (getScope() != null) {
             builder.appendQueryParameter("scope", getScope());
         }
-        if (getRedirectUri() != null) {
-            builder.appendQueryParameter("redirect_uri", getRedirectUri());
-        }
+        builder.appendQueryParameter("redirect_uri", getRedirectUri());
 
         // TODO include state to prevent XSS
-
 
         return builder.build().toString();
     }
@@ -55,25 +52,25 @@ public abstract class OAuthConfig {
     /**
      * @return the Access token request uri (eg: http://provider.sample/oauth/access_token)
      */
-    protected abstract String getAccessTokenRequestUri();
+    public abstract String getAccessTokenRequestUri();
 
     /**
      * @return the Redirect URI used in case of success, as configured in the 3rd party API
      */
-    @Nullable
+    @NonNull
     public abstract String getRedirectUri();
 
     /**
      * @return the client id for your app
      */
     @NonNull
-    protected abstract String getClientId();
+    public abstract String getClientId();
 
     /**
      * @return the secret key for your app
      */
     @Nullable
-    protected abstract String getClientSecret();
+    public abstract String getClientSecret();
 
     /**
      * @return The scope of the access request (eg : read, write)
@@ -86,6 +83,16 @@ public abstract class OAuthConfig {
      * @return the request URI to get the user information (user name, ...)
      */
     public abstract String getUserInfoRequest(@NonNull String accessToken);
+
+    /**
+     * Parse the user name from the response of the user info request
+     *
+     * @param string the body of the response
+     * @return the user name
+     * @throws IllegalArgumentException if the response does not contain a user name
+     */
+    @NonNull
+    public abstract String parseUserName(@NonNull String string) throws IllegalArgumentException;
 
     /**
      * @return when querying the user info request, the path to the user name information.

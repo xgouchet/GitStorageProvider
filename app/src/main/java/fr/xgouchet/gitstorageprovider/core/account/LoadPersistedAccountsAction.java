@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
-import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.config.OAuthConfigFactory;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncAction;
 
 /**

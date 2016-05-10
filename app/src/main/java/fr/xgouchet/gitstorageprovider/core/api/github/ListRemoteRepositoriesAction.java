@@ -12,6 +12,7 @@ import java.util.List;
 
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitsp.git.RemoteRepo;
+import fr.xgouchet.gitsp.oauth.config.GithubOAuthConfig;
 import fr.xgouchet.gitstorageprovider.utils.actions.AsyncRequestAction;
 
 /**

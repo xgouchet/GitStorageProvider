@@ -12,18 +12,28 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
-import fr.xgouchet.gitsp.oauth.OAuthConfig;
-import fr.xgouchet.gitsp.oauth.OAuthConfigFactory;
+import fr.xgouchet.gitsp.oauth.OAuthAccessTokenObservable;
+import fr.xgouchet.gitsp.oauth.OAuthAccount;
+import fr.xgouchet.gitsp.oauth.OAuthAccountInfoObservable;
+import fr.xgouchet.gitsp.oauth.OAuthAccountStore;
+import fr.xgouchet.gitsp.oauth.config.OAuthConfig;
+import fr.xgouchet.gitsp.oauth.config.OAuthConfigFactory;
 import fr.xgouchet.gitsp.ui.fragments.stateful.FabDelegate;
 import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleStateDelegate;
 import fr.xgouchet.gitsp.ui.fragments.stateful.StateHolder;
 import fr.xgouchet.gitsp.ui.fragments.stateful.StatefulDialogFragment;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * @author Xavier Gouchet
  */
 public class OAuthFragment extends StatefulDialogFragment {
+
 
     public static OAuthFragment withService(final @OAuthConfigFactory.ServiceId int serviceId) {
         OAuthFragment fragment = new OAuthFragment();
@@ -39,6 +49,12 @@ public class OAuthFragment extends StatefulDialogFragment {
 
     @Nullable
     private OAuthConfig oAuthConfig;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onResume() {
@@ -90,33 +106,105 @@ public class OAuthFragment extends StatefulDialogFragment {
 
             // setup webview
             WebView webview = new WebView(getActivity());
-            webview.setWebViewClient(new OAuthWebViewClient(oAuthConfig));
+            webview.setWebViewClient(new OAuthWebViewClient(oAuthConfig, oAuthWebViewListener));
 
             // settings
             WebSettings settings = webview.getSettings();
             settings.setJavaScriptEnabled(true);
-
 
             return webview;
         }
 
         @Override
         public void updateIdealView(@NonNull View idealView) {
-            // Load 1st OAuth page
+            assert oAuthConfig != null;
             ((WebView) idealView).loadUrl(oAuthConfig.getRequestTokenUri());
+        }
+    };
+
+    private final OAuthWebViewClient.OAuthWebViewListener oAuthWebViewListener = new OAuthWebViewClient.OAuthWebViewListener() {
+        @Override
+        public void onCodeObtained(@NonNull String code) {
+            Toast.makeText(getActivity(), "Code " + code, Toast.LENGTH_SHORT).show();
+            setCurrentState(StateHolder.LOADING);
+
+            Observable.create(new OAuthAccessTokenObservable(oAuthConfig, code))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(accessTokenObserver);
+        }
+
+        @Override
+        public void onError(String error, String errorDescription) {
+            Toast.makeText(getActivity(), "Error : " + error + " / " + errorDescription, Toast.LENGTH_SHORT).show();
+            stateDelegate.setFailure(new RuntimeException(errorDescription));
+            setCurrentState(StateHolder.ERROR);
+            // invalid_request, unauthorized_client, access_denied, unsupported_response_type, invalid_scope, server_error, temporarily_unavailable
+        }
+    };
+
+    private final Observer<String> accessTokenObserver = new Observer<String>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            stateDelegate.setFailure(e);
+            setCurrentState(StateHolder.ERROR);
+        }
+
+        @Override
+        public void onNext(String accessToken) {
+            Observable.create(new OAuthAccountInfoObservable(oAuthConfig, accessToken))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(oAuthAccountObserver);
+        }
+    };
+
+    private final Observer<OAuthAccount> oAuthAccountObserver = new Observer<OAuthAccount>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            stateDelegate.setFailure(e);
+            setCurrentState(StateHolder.ERROR);
+        }
+
+        @Override
+        public void onNext(OAuthAccount oAuthAccount) {
+            OAuthAccountStore.persistAccount(getActivity(), oAuthAccount);
+            dismiss();
         }
     };
 
 
     private static class OAuthWebViewClient extends WebViewClient {
 
+        public interface OAuthWebViewListener {
+            void onCodeObtained(String code);
+
+            void onError(String error, String errorDescription);
+        }
+
         public static final String TAG = OAuthWebViewClient.class.getSimpleName();
 
         @NonNull
         private final OAuthConfig oAuthConfig;
 
-        private OAuthWebViewClient(@NonNull OAuthConfig oAuthConfig) {
+        @NonNull
+        private final OAuthWebViewListener oAuthWebViewListener;
+
+
+        private OAuthWebViewClient(@NonNull OAuthConfig oAuthConfig,
+                                   @NonNull OAuthWebViewListener oAuthWebViewListener) {
             this.oAuthConfig = oAuthConfig;
+            this.oAuthWebViewListener = oAuthWebViewListener;
         }
 
         @Override
@@ -126,20 +214,16 @@ public class OAuthFragment extends StatefulDialogFragment {
             Log.d(TAG, "onPageStarted " + url);
 
             if (url.startsWith(oAuthConfig.getRedirectUri())) {
-
-
-                // code=xxx&state=yyy -> success
                 // TODO handle state to prevent XSS
-                String code = Uri.parse(url).getQueryParameter("code");
-                if (code != null) {
-                    // TODO mAccountsManager.requestAccessToken(mOAuthConfig, code);
-//                    finish("Fetching user information...");
-                }
 
-                // TODO handle error=error_code&error_description=description&error_uri=&state=yyy
-                /**
-                 * invalid_request, unauthorized_client, access_denied, unsupported_response_type, invalid_scope, server_error, temporarily_unavailable
-                 */
+                String code = Uri.parse(url).getQueryParameter("code");
+                String error = Uri.parse(url).getQueryParameter("error");
+                String errorDescription = Uri.parse(url).getQueryParameter("error_description");
+                if (code != null) {
+                    oAuthWebViewListener.onCodeObtained(code);
+                } else if (error != null) {
+                    oAuthWebViewListener.onError(error, errorDescription);
+                }
 
                 view.stopLoading();
             }

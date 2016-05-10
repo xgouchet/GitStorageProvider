@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import fr.xgouchet.gitsp.oauth.config.OAuthConfigFactory;
+
 /**
  * @author Xavier Gouchet
  */

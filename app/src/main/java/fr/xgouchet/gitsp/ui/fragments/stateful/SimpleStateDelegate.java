@@ -31,6 +31,9 @@ public abstract class SimpleStateDelegate implements StateDelegate {
 
     public void setFailure(@Nullable Throwable failure) {
         this.failure = failure;
+        if (failure != null){
+            failure.printStackTrace();
+        }
     }
 
     @NonNull
