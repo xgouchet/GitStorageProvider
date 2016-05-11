@@ -3,7 +3,6 @@ package fr.xgouchet.gitsp.ui.fragments.stateful;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +17,26 @@ public abstract class SimpleStateDelegate implements StateDelegate {
 
 
     @Nullable
+    private CharSequence loadingMessage;
+    @Nullable
     private CharSequence emptyMessage;
     @Nullable
     private Drawable emptyIcon;
     @Nullable
     private Throwable failure;
 
-    public void setEmptyContent(@Nullable CharSequence message, @Nullable Drawable icon) {
+    public void setLoading(@Nullable CharSequence message) {
+        loadingMessage = message;
+    }
+
+    public void setEmpty(@Nullable CharSequence message, @Nullable Drawable icon) {
         emptyMessage = message;
         emptyIcon = icon;
     }
 
     public void setFailure(@Nullable Throwable failure) {
         this.failure = failure;
-        if (failure != null){
+        if (failure != null) {
             failure.printStackTrace();
         }
     }

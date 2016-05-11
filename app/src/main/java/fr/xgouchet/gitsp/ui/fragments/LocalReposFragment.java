@@ -8,14 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import butterknife.BindView;
 import fr.xgouchet.gitsp.R;
 import fr.xgouchet.gitsp.git.LocalRepo;
 import fr.xgouchet.gitsp.git.LocalReposObservable;
 import fr.xgouchet.gitsp.ui.adapters.ListRV;
+import fr.xgouchet.gitsp.ui.adapters.TextIconViewHolder;
 import fr.xgouchet.gitsp.ui.fragments.stateful.FabDelegate;
 import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleFabDelegate;
 import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleStateDelegate;
@@ -39,6 +38,7 @@ public class LocalReposFragment extends StatefulFragment {
     public void onResume() {
         super.onResume();
 
+        stateDelegate.setLoading("");
         setCurrentState(StateHolder.LOADING);
 
         localRepoAdapter.clear();
@@ -50,7 +50,7 @@ public class LocalReposFragment extends StatefulFragment {
 
 
     private void setEmpty() {
-        stateDelegate.setEmptyContent(getString(R.string.empty_local_repos),
+        stateDelegate.setEmpty(getString(R.string.empty_local_repos),
                 ContextCompat.getDrawable(getActivity(), R.drawable.ic_local_repository));
         setCurrentState(StateHolder.EMPTY);
     }
@@ -144,24 +144,26 @@ public class LocalReposFragment extends StatefulFragment {
     private final ListRV.Adapter<LocalRepo> localRepoAdapter = new ListRV.Adapter<LocalRepo>() {
         @Override
         public ListRV.ViewHolder<LocalRepo> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_local_repos, parent, false);
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_icon, parent, false);
             return new LocalRepoViewHolder(itemView);
         }
     };
 
-    static class LocalRepoViewHolder extends ListRV.ViewHolder<LocalRepo> {
-
-        @BindView(android.R.id.title)
-        TextView titleView;
+    static class LocalRepoViewHolder extends TextIconViewHolder<LocalRepo> {
 
         public LocalRepoViewHolder(View itemView) {
             super(itemView);
-            bind(this, itemView);
+        }
+
+        @Nullable
+        @Override
+        protected String getText(LocalRepo item, int position) {
+            return item.getName();
         }
 
         @Override
-        protected void onItemBound(LocalRepo item, int position) {
-            titleView.setText(item.getName());
+        protected int getIcon(LocalRepo item, int position) {
+            return R.drawable.ic_local_repository;
         }
     }
 }

@@ -9,10 +9,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import butterknife.BindView;
-import fr.xgouchet.gitsp.ui.fragments.AccountsFragment;
-import fr.xgouchet.gitsp.ui.fragments.CredentialsFragment;
-import fr.xgouchet.gitsp.ui.fragments.LocalReposFragment;
 import fr.xgouchet.gitsp.R;
+import fr.xgouchet.gitsp.ui.fragments.AccountsFragment;
+import fr.xgouchet.gitsp.ui.fragments.LocalReposFragment;
 
 import static butterknife.ButterKnife.bind;
 
@@ -38,10 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
         public static final int PAGE_LOCAL_REPOS = 0;
         public static final int PAGE_ACCOUNTS = 1;
-        public static final int PAGE_CREDENTIALS = 2;
-        public static final int PAGE_SETTINGS = 3;
+        public static final int PAGE_SETTINGS = 2;
 
-        public static final int PAGES_COUNT = 4;
+        public static final int PAGES_COUNT = 3;
 
         public MainPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -59,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
                     return getString(R.string.title_page_local_repos);
                 case PAGE_ACCOUNTS:
                     return getString(R.string.title_page_accounts);
-                case PAGE_CREDENTIALS:
-                    return getString(R.string.title_page_credentials);
                 case PAGE_SETTINGS:
                     return getString(R.string.title_page_settings);
                 default:
@@ -75,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
                     return new LocalReposFragment();
                 case PAGE_ACCOUNTS:
                     return new AccountsFragment();
-                case PAGE_CREDENTIALS:
-                    return new CredentialsFragment();
                 default:
                     return new Fragment();
             }

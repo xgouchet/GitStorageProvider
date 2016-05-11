@@ -11,15 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import butterknife.BindView;
 import fr.xgouchet.gitsp.R;
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitsp.oauth.OAuthAccountStore;
 import fr.xgouchet.gitsp.oauth.config.OAuthConfigFactory;
 import fr.xgouchet.gitsp.ui.adapters.ListRV;
+import fr.xgouchet.gitsp.ui.adapters.TextIconViewHolder;
 import fr.xgouchet.gitsp.ui.fragments.stateful.FabDelegate;
 import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleFabDelegate;
 import fr.xgouchet.gitsp.ui.fragments.stateful.SimpleStateDelegate;
@@ -31,8 +29,6 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static butterknife.ButterKnife.bind;
-
 /**
  * @author Xavier Gouchet
  */
@@ -43,6 +39,7 @@ public class AccountsFragment extends StatefulFragment {
     @Override
     public void onResume() {
         super.onResume();
+        stateDelegate.setLoading("");
         setCurrentState(StateHolder.LOADING);
         oAuthAccountAdapter.clear();
         Observable.create(new OAuthAccountStore.Observable(getActivity()))
@@ -52,7 +49,7 @@ public class AccountsFragment extends StatefulFragment {
     }
 
     private void setEmpty() {
-        stateDelegate.setEmptyContent(getString(R.string.empty_accounts),
+        stateDelegate.setEmpty(getString(R.string.empty_accounts),
                 ContextCompat.getDrawable(getActivity(), R.drawable.ic_accounts));
         setCurrentState(StateHolder.EMPTY);
     }
@@ -136,37 +133,32 @@ public class AccountsFragment extends StatefulFragment {
     private final ListRV.Adapter<OAuthAccount> oAuthAccountAdapter = new ListRV.Adapter<OAuthAccount>() {
         @Override
         public ListRV.ViewHolder<OAuthAccount> onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_account, parent, false);
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_icon, parent, false);
             return new OAuthAccountViewHolder(itemView);
         }
     };
 
-    static class OAuthAccountViewHolder extends ListRV.ViewHolder<OAuthAccount> {
-
-        @BindView(android.R.id.title)
-        TextView titleView;
-        @BindView(android.R.id.icon)
-        ImageView iconView;
+    private static class OAuthAccountViewHolder extends TextIconViewHolder<OAuthAccount> {
 
         public OAuthAccountViewHolder(View itemView) {
             super(itemView);
-            bind(this, itemView);
+        }
+
+        @Nullable
+        @Override
+        protected String getText(OAuthAccount item, int position) {
+            return item.getUserName();
         }
 
         @Override
-        protected void onItemBound(OAuthAccount item, int position) {
-            titleView.setText(item.getUserName());
-
-            int icon;
+        protected int getIcon(OAuthAccount item, int position) {
             switch (item.getServiceId()) {
                 case OAuthConfigFactory.SERVICE_GITHUB:
-                    icon = R.mipmap.ic_account_github;
-                    break;
+                    return R.mipmap.ic_account_github;
+                case OAuthConfigFactory.SERVICE_NONE:
                 default:
-                    icon = R.mipmap.ic_launcher;
-                    break;
+                    return R.drawable.ic_empty;
             }
-            iconView.setImageResource(icon);
         }
     }
 }

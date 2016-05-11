@@ -53,7 +53,7 @@ public class GithubOAuthConfig extends OAuthConfig {
     @NonNull
     @Override
     protected String getScope() {
-        return "public_repo,repo";
+        return "public_repo,repo,write:public_key";
     }
 
     @NonNull

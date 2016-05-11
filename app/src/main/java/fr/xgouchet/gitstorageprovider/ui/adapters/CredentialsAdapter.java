@@ -10,7 +10,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import fr.xgouchet.gitsp.R;
-import fr.xgouchet.gitsp.git.Credential;
+import fr.xgouchet.gitsp.credentials.Credential;
 
 import static butterknife.ButterKnife.bind;
 
@@ -52,7 +52,7 @@ public class CredentialsAdapter extends RecyclerView.Adapter<CredentialsAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_local_repos, parent, false);
+                .inflate(R.layout.item_text_icon, parent, false);
         return new ViewHolder(itemView);
     }
 

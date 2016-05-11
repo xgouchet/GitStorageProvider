@@ -1,6 +1,5 @@
 package fr.xgouchet.gitsp.ui.fragments.stateful;
 
-import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,13 +42,6 @@ public class StateHolder {
     private View emptyView, loadingView, errorView, idealView;
 
     @Nullable
-    private Throwable failure;
-    @Nullable
-    private CharSequence emptyMessage;
-    @Nullable
-    private Drawable emptyIcon;
-
-    @Nullable
     private final FabDelegate fabDelegate;
     @NonNull
     private final StateDelegate stateDelegate;
@@ -85,30 +77,6 @@ public class StateHolder {
     /*
      * STATES
      */
-
-    @UiThread
-    public void setLoadingState() {
-        setCurrentState(LOADING);
-    }
-
-    @UiThread
-    public void setIdealState() {
-        setCurrentState(IDEAL);
-    }
-
-    @UiThread
-    public void setEmptyState(@Nullable CharSequence emptyMessage, @Nullable Drawable emptyIcon) {
-        this.emptyMessage = emptyMessage;
-        this.emptyIcon = emptyIcon;
-        setCurrentState(EMPTY);
-    }
-
-    @UiThread
-    public void setErrorState(@Nullable Throwable failure) {
-        this.failure = failure;
-        setCurrentState(ERROR);
-    }
-
 
     @UiThread
     public void setCurrentState(@State int state) {

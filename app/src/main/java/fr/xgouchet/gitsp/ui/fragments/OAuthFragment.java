@@ -126,6 +126,7 @@ public class OAuthFragment extends StatefulDialogFragment {
         @Override
         public void onCodeObtained(@NonNull String code) {
             Toast.makeText(getActivity(), "Code " + code, Toast.LENGTH_SHORT).show();
+            stateDelegate.setLoading("Checking Access code");
             setCurrentState(StateHolder.LOADING);
 
             Observable.create(new OAuthAccessTokenObservable(oAuthConfig, code))
@@ -157,6 +158,8 @@ public class OAuthFragment extends StatefulDialogFragment {
 
         @Override
         public void onNext(String accessToken) {
+            stateDelegate.setLoading("Fetching account informations");
+            setCurrentState(StateHolder.LOADING);
             Observable.create(new OAuthAccountInfoObservable(oAuthConfig, accessToken))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -179,7 +182,8 @@ public class OAuthFragment extends StatefulDialogFragment {
         @Override
         public void onNext(OAuthAccount oAuthAccount) {
             OAuthAccountStore.persistAccount(getActivity(), oAuthAccount);
-            dismiss();
+            stateDelegate.setLoading("Creating credentials");
+
         }
     };
 

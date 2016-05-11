@@ -1,4 +1,4 @@
-package fr.xgouchet.gitsp.git;
+package fr.xgouchet.gitsp.credentials;
 
 import org.eclipse.jgit.transport.CredentialsProvider;
 
