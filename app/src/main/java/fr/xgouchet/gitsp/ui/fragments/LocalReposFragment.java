@@ -3,6 +3,7 @@ package fr.xgouchet.gitsp.ui.fragments;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,6 +98,8 @@ public class LocalReposFragment extends StatefulFragment {
     private final FabDelegate fabDelegate = new SimpleFabDelegate() {
         @Override
         public void onFabClicked(@StateHolder.State int state) {
+            DialogFragment fragment = new CloneRepositoryFragment();
+            fragment.show(getFragmentManager(), "OAuth");
             Toast.makeText(getActivity(), "Cloning Editors (need Credentials)", Toast.LENGTH_SHORT).show();
 
 //            Toast.makeText(getActivity(), "Cloning Editors (need Credentials", Toast.LENGTH_SHORT).show();
@@ -119,7 +122,7 @@ public class LocalReposFragment extends StatefulFragment {
         @Nullable
         @Override
         public Drawable getFabDrawable(@StateHolder.State int state) {
-            return ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_add);
+            return ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_add_local_repository);
         }
     };
 

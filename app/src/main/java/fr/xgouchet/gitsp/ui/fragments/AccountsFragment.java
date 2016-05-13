@@ -126,7 +126,6 @@ public class AccountsFragment extends StatefulFragment {
 
         @Override
         public void updateIdealView(@NonNull View idealView) {
-
         }
     };
 

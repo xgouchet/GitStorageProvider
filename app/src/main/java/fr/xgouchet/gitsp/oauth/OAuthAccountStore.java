@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fr.xgouchet.gitsp.oauth.config.OAuthConfig;
+import fr.xgouchet.gitsp.oauth.config.OAuthConfigFactory;
 import rx.Subscriber;
 
 /**

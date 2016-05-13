@@ -32,7 +32,7 @@ public class OAuthAccountInfoObservable implements Observable.OnSubscribe<OAuthA
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(oAuthConfig.getUserInfoRequest(accessToken))
+                .url(oAuthConfig.getUserInfoRequestUri(accessToken))
                 .build();
         try {
             Response response = client.newCall(request).execute();

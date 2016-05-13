@@ -4,11 +4,17 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import fr.xgouchet.gitsp.git.RemoteRepo;
+import rx.Observable;
+
 
 /**
  * @author Xavier Gouchet
  */
 public abstract class OAuthConfig {
+
+    @Nullable
+    private String accessToken;
 
     @NonNull
     public String getRequestTokenUri() {
@@ -32,27 +38,10 @@ public abstract class OAuthConfig {
 
 
     /**
-     * @return the key in the shared preference to store the access token for this config
-     */
-    public final String getAccessTokenKey() {
-        return String.format("%s_access_token", getConfigId());
-    }
-
-    /**
-     * @return a unique id representing this configuration (usually the name of the OAuth provider, eg : github, google, ...)
-     */
-    public abstract String getConfigId();
-
-    /**
      * @return the authorization endpoint uri (eg: http://provider.sample/oauth/authorize)
      */
     @NonNull
     protected abstract String getAuthorizationEndpointUri();
-
-    /**
-     * @return the Access token request uri (eg: http://provider.sample/oauth/access_token)
-     */
-    public abstract String getAccessTokenRequestUri();
 
     /**
      * @return the Redirect URI used in case of success, as configured in the 3rd party API
@@ -67,12 +56,6 @@ public abstract class OAuthConfig {
     public abstract String getClientId();
 
     /**
-     * @return the secret key for your app
-     */
-    @Nullable
-    public abstract String getClientSecret();
-
-    /**
      * @return The scope of the access request (eg : read, write)
      */
     @Nullable
@@ -82,7 +65,7 @@ public abstract class OAuthConfig {
      * @param accessToken the current (valid) access token
      * @return the request URI to get the user information (user name, ...)
      */
-    public abstract String getUserInfoRequest(@NonNull String accessToken);
+    public abstract String getUserInfoRequestUri(@NonNull String accessToken);
 
     /**
      * Parse the user name from the response of the user info request
@@ -110,4 +93,19 @@ public abstract class OAuthConfig {
      */
     @OAuthConfigFactory.ServiceId
     public abstract int getServiceId();
+
+    @NonNull
+    public abstract Observable.OnSubscribe<String> getAccessTokenObservable(String code);
+
+    @NonNull
+    public abstract Observable.OnSubscribe<RemoteRepo> getRemoteRepoObservable();
+
+    public void setAccessToken(@Nullable String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    @Nullable
+    public String getAccessToken() {
+        return accessToken;
+    }
 }

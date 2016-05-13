@@ -20,12 +20,14 @@ public final class OAuthConfigFactory {
     public @interface ServiceId {
     }
 
+    private static final OAuthConfig CONFIG_GITHUB = new GithubOAuthConfig();
+
 
     @Nullable
     public static OAuthConfig getOAuthConfig(final int serviceId) {
         switch (serviceId) {
             case SERVICE_GITHUB:
-                return new GithubOAuthConfig();
+                return CONFIG_GITHUB;
             case SERVICE_NONE:
                 return null;
             default:

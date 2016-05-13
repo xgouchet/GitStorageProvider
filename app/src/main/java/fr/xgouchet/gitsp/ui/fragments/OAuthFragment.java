@@ -14,7 +14,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import fr.xgouchet.gitsp.oauth.OAuthAccessTokenObservable;
 import fr.xgouchet.gitsp.oauth.OAuthAccount;
 import fr.xgouchet.gitsp.oauth.OAuthAccountInfoObservable;
 import fr.xgouchet.gitsp.oauth.OAuthAccountStore;
@@ -126,10 +125,10 @@ public class OAuthFragment extends StatefulDialogFragment {
         @Override
         public void onCodeObtained(@NonNull String code) {
             Toast.makeText(getActivity(), "Code " + code, Toast.LENGTH_SHORT).show();
+            assert oAuthConfig != null;
             stateDelegate.setLoading("Checking Access code");
             setCurrentState(StateHolder.LOADING);
-
-            Observable.create(new OAuthAccessTokenObservable(oAuthConfig, code))
+            Observable.create(oAuthConfig.getAccessTokenObservable(code))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(accessTokenObserver);
@@ -160,6 +159,9 @@ public class OAuthFragment extends StatefulDialogFragment {
         public void onNext(String accessToken) {
             stateDelegate.setLoading("Fetching account informations");
             setCurrentState(StateHolder.LOADING);
+            if (oAuthConfig == null) {
+                return;
+            }
             Observable.create(new OAuthAccountInfoObservable(oAuthConfig, accessToken))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

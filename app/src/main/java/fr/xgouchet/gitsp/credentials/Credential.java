@@ -1,5 +1,6 @@
 package fr.xgouchet.gitsp.credentials;
 
+import org.eclipse.jgit.transport.CredentialItem;
 import org.eclipse.jgit.transport.CredentialsProvider;
 
 /**
@@ -25,5 +26,8 @@ public abstract class Credential extends CredentialsProvider {
         return mHost;
     }
 
-
+    @Override
+    public boolean supports(CredentialItem... items) {
+        return true;
+    }
 }

@@ -3,7 +3,7 @@
     xmlns:apk="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:layout_marginEnd="16dp"
     android:layout_marginStart="16dp"
@@ -11,33 +11,53 @@
     android:elevation="8dp"
     apk:cardCornerRadius="8dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:padding="8dp">
 
         <ImageView
             android:id="@android:id/icon"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             tools:src="@mipmap/ic_account_github" />
 
         <TextView
             android:id="@android:id/title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:layout_gravity="start|center_vertical"
+            android:layout_toEndOf="@android:id/icon"
             android:ellipsize="end"
             android:gravity="start|center_vertical"
             android:maxLines="1"
+
             android:paddingBottom="4dp"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
             android:paddingTop="4dp"
             android:textAppearance="?android:textAppearanceListItem"
-            tools:text="XGouchet" />
-    </LinearLayout>
+            tools:text="Foobar" />
+
+        <TextView
+            android:id="@android:id/summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@android:id/icon"
+
+            android:paddingBottom="4dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:textAppearance="?android:textAppearanceListItemSecondary"
+            android:textColor="@color/secondary_text"
+            tools:text="Lorem ipsum dolor sit amet. Fluctuat nec mergitur." />
+    </RelativeLayout>
 </android.support.v7.widget.CardView>
 
